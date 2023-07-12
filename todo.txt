@@ -1,0 +1,6 @@
+Function to calculate tokens before embedding
+ - Call api endpoint
+ - Generate the documents
+ - Calculate tokens
+
+ Need to be able to backcheck vectors, does vectorstore match content in db?

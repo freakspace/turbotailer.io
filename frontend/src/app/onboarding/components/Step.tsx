@@ -1,16 +1,36 @@
+import { useEffect } from "react";
+
+import { motion, useAnimation } from "framer-motion";
+
 import { IStep } from "../../../../typings";
 
 export default function Step({
   step,
   currentStep,
   setCurrentStep,
+  isLoading,
 }: {
   step: IStep;
   currentStep: number;
   setCurrentStep: React.Dispatch<React.SetStateAction<number>>;
+  isLoading: boolean;
 }) {
+  const controls = useAnimation();
+
+  useEffect(() => {
+    if (!isLoading) {
+      controls.start({
+        opacity: 1,
+        x: 0,
+        transition: { duration: 0.75 },
+      });
+    }
+  }, [isLoading, controls]);
+
   return (
-    <button
+    <motion.button
+      animate={controls}
+      initial={{ opacity: 0, x: -100 }}
       onClick={() => setCurrentStep(step.number)}
       className={`flex items-center justify-between border px-4 py-2 rounded-lg text-left ${
         step.number === currentStep ? "border border-solid border-pink-600" : ``
@@ -38,6 +58,6 @@ export default function Step({
           />
         </svg>
       )}
-    </button>
+    </motion.button>
   );
 }

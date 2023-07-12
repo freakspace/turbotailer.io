@@ -51,7 +51,6 @@ class StoresViewSet(RetrieveModelMixin, ListModelMixin, GenericViewSet):
     @action(detail=False, methods=['post'])
     def update_woocommerce(self, request):
         serializer = UpdateWoocommerceStoreSerializer(data=request.data, partial=True)
-
         if not serializer.is_valid():
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
@@ -75,9 +74,9 @@ class StoresViewSet(RetrieveModelMixin, ListModelMixin, GenericViewSet):
             if store.user != request.user:
                 return Response({"error": "You are not the owner of that store"})
 
-            store_name = request.data.get('store_name')
             consumer_key = request.data.get('consumer_key')
             consumer_secret = request.data.get('consumer_secret')
+            store_name = request.data.get('store_name')
             base_url = request.data.get('base_url')
 
             if store_name is not None:
@@ -149,7 +148,6 @@ class StoresViewSet(RetrieveModelMixin, ListModelMixin, GenericViewSet):
     
     @action(detail=False, methods=['post'])
     def create_channel(self, request):
-        # TODO Create multiple at one time
         serializer = CreateChannelSerializer(data=request.data)
 
         if not serializer.is_valid():

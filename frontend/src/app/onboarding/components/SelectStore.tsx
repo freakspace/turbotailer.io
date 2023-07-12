@@ -1,11 +1,33 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
+
+import { motion, useAnimation } from "framer-motion";
 
 const storeTypes = ["WooCommerce", "Magento", "Prestashop", "Shopify"];
 
-export default function SelectStore({ token }: { token: string | null }) {
-  const [selected, setSelected] = useState("");
-  const [storeName, setStoreName] = useState("");
-  const [baseUrl, setBaseUrl] = useState("");
+import { createWooCommerce, updateWooCommerce } from "../services";
+
+import StepWrapper from "./StepWrapper";
+
+interface SelectStoreStep {
+  token: string | null;
+  selectedProp: string;
+  storeNameProp: string | undefined;
+  baseUrlProp: string | undefined;
+  storeIdProp: string | undefined;
+  setCurrentStep: React.Dispatch<React.SetStateAction<number>>;
+}
+
+function SelectStore({
+  token,
+  selectedProp,
+  storeNameProp,
+  baseUrlProp,
+  storeIdProp,
+  setCurrentStep,
+}: SelectStoreStep) {
+  const [selected, setSelected] = useState(selectedProp);
+  const [storeName, setStoreName] = useState(storeNameProp);
+  const [baseUrl, setBaseUrl] = useState(baseUrlProp);
 
   const [storeNameError, setStoreNameError] = useState("");
   const [baseUrlError, setBaseUrlError] = useState("");
@@ -38,26 +60,25 @@ export default function SelectStore({ token }: { token: string | null }) {
       setStoreTypeError("");
     }
 
+    // TODO Only call endpoint if data changed?
     if (selected === "WooCommerce") {
-      console.log("Calling endpoint");
-      const response = await fetch(
-        `http://127.0.0.1:8000/api/stores/create_woocommerce/`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: "Token " + token,
-          },
-          body: JSON.stringify({
-            store_name: storeName,
-            base_url: baseUrl,
-          }),
+      if (storeIdProp) {
+        const response = await updateWooCommerce(
+          token,
+          storeIdProp,
+          storeName,
+          baseUrl
+        );
+
+        if (response.ok) {
+          setCurrentStep((prev) => prev + 1);
         }
-      );
-
-      const data = await response.json();
-
-      console.log(data);
+      } else {
+        const response = await createWooCommerce(token, storeName, baseUrl);
+        if (response.ok) {
+          setCurrentStep((prev) => prev + 1);
+        }
+      }
     }
   };
 
@@ -77,8 +98,18 @@ export default function SelectStore({ token }: { token: string | null }) {
     );
   };
 
+  const controls = useAnimation();
+
+  useEffect(() => {
+    controls.start({
+      opacity: 1,
+      x: 0,
+      transition: { duration: 0.25 },
+    });
+  });
+
   return (
-    <div className="border border-solid border-gray-200 rounded-xl p-8 bg-white">
+    <StepWrapper>
       <h3 className="text-xl font-bold mb-5">Basic information</h3>
       <div className="grid grid-cols-2 gap-4 mb-5">
         <div
@@ -97,7 +128,7 @@ export default function SelectStore({ token }: { token: string | null }) {
               (storeNameError
                 ? "border-solid border border-red-600 "
                 : "border-solid border border-gray-300 ") +
-              "h-10 rounded-md focus:border-2 focus:border-pink-600 focus:outline-none"
+              "px-3 py-2 rounded-md focus:border-2 focus:border-pink-600 focus:outline-none"
             }
           />
           {storeNameError && (
@@ -120,7 +151,7 @@ export default function SelectStore({ token }: { token: string | null }) {
               (baseUrlError
                 ? "border-solid border border-red-600 "
                 : "border-solid border border-gray-300 ") +
-              "h-10 rounded-md focus:border-2 focus:border-pink-600 focus:outline-none"
+              "px-3 py-2 rounded-md focus:border-2 focus:border-pink-600 focus:outline-none"
             }
           />
           {baseUrlError && (
@@ -145,6 +176,8 @@ export default function SelectStore({ token }: { token: string | null }) {
       {storeTypeError && (
         <span className="text-sm text-red-600">{storeTypeError}</span>
       )}
-    </div>
+    </StepWrapper>
   );
 }
+
+export default SelectStore;

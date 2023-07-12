@@ -7,7 +7,6 @@ export interface IStep {
   is_finished: boolean
   number: number
   description: string
-  field: string
 }
 
 export interface IWooCommerceType {

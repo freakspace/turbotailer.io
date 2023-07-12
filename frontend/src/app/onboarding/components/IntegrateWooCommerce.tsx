@@ -2,6 +2,10 @@ import { useState } from "react";
 
 const storeTypes = ["WooCommerce", "Magento", "Prestashop", "Shopify"];
 
+import { updateWooCommerce } from "../services";
+
+import StepWrapper from "./StepWrapper";
+
 export default function IntegrateWooCommerce({
   token,
   storeId,
@@ -40,20 +44,13 @@ export default function IntegrateWooCommerce({
       setConsumerSecretError("");
     }
 
-    const response = await fetch(
-      `http://127.0.0.1:8000/api/stores/update_woocommerce/`,
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: "Token " + token,
-        },
-        body: JSON.stringify({
-          consumer_key: consumerKey,
-          consumer_secret: consumerSecret,
-          store_id: storeId,
-        }),
-      }
+    const response = await updateWooCommerce(
+      token,
+      storeId,
+      undefined,
+      undefined,
+      consumerKey,
+      consumerSecret
     );
 
     const data = await response.json();
@@ -62,7 +59,7 @@ export default function IntegrateWooCommerce({
   };
 
   return (
-    <div className="grid grid-cols-2 gap-8 border border-solid border-gray-200 rounded-xl p-8 bg-white">
+    <StepWrapper>
       <div className="">
         <h3 className="text-xl font-bold mb-5">
           Create and add your WooCommerce API keys
@@ -97,7 +94,7 @@ export default function IntegrateWooCommerce({
         <div
           className={
             (consumerSecretError ? "border-solid border-red-600 " : "") +
-            "flex flex-col mb-4"
+            "flex flex-col mb-8"
           }
         >
           <label className="">Consumer Secret</label>
@@ -117,6 +114,29 @@ export default function IntegrateWooCommerce({
             <span className="text-sm text-red-600">{consumerSecretError}</span>
           )}
         </div>
+        <div className="mb-8">
+          <h3 className="text-xl font-bold mb-5">
+            Add this script just before your closing &lt;/head&gt; tag
+          </h3>
+          <pre className="bg-gray-600 p-8 text-white rounded-xl border border-solid border-black mb-5">
+            <code>
+              {
+                "<script src='https://turbotailer.io/static/js/turbotailer.js'></script>"
+              }
+            </code>
+          </pre>
+        </div>
+        <div className="mb-8">
+          <h3 className="text-xl font-bold mb-5">
+            Add this script just before your closing &lt;/body&gt; tag
+          </h3>
+          <pre className="bg-gray-600 p-8 text-white rounded-xl border border-solid border-black mb-5">
+            <code>
+              {`<script>\n    window.addEventListener('DOMContentLoaded', () => {\n        initializeChatbot('${storeId}');\n    });\n</script>`}
+            </code>
+          </pre>
+        </div>
+
         <div className="">
           <button
             onClick={() => updateStore()}
@@ -126,9 +146,6 @@ export default function IntegrateWooCommerce({
           </button>
         </div>
       </div>
-      <div className="">
-        <p className="text-lg">This is a guide...</p>
-      </div>
-    </div>
+    </StepWrapper>
   );
 }

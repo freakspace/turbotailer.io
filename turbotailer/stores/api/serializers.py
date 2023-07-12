@@ -11,8 +11,8 @@ class CreateWoocommerceStoreSerializer(serializers.Serializer):
 
 
 class UpdateWoocommerceStoreSerializer(serializers.Serializer):
-    store_id = serializers.CharField(max_length=255)
-    store_name = serializers.CharField(max_length=255)
+    store_id = serializers.CharField(max_length=255, required=False)
+    store_name = serializers.CharField(max_length=255, required=False)
     consumer_key = serializers.CharField(max_length=255, required=False)
     consumer_secret = serializers.CharField(max_length=255, required=False)
     base_url = serializers.CharField(max_length=255, required=False)

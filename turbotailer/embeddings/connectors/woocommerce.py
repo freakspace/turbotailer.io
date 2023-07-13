@@ -53,8 +53,12 @@ class WoocommerceConnector:
     def ping(self):
         if not self.connection:
             self.connect()
-            print("Kig Under")            
-            print(self.connection)
+
+        url = self.base_url + '/wp-json/wc/v3'
+
+        response = self.connection.get(url)
+
+        return response
 
 
     def get_products(self):

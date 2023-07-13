@@ -50,3 +50,25 @@ export const updateWooCommerce = async (
 
     return response
 }
+
+
+export const verifyConnection = async (
+  token: string, 
+  storeId: string,  
+  ) => {
+  const response = await fetch(
+    `http://127.0.0.1:8000/api/stores/ping_connection/`,
+    {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: "Token " + token,
+      },
+      body: JSON.stringify({
+        store_id: storeId,
+      }),
+    }
+  );
+
+  return response
+};

@@ -11,6 +11,7 @@ import IntegrateWooCommerce from "./components/IntegrateWooCommerce";
 import VerifyConnection from "./components/VerifyConnection";
 import Embedding from "./components/Embedding";
 import Step from "./components/Step";
+import { verifyConnection } from "./services";
 let steps: IStep[] = [
   {
     is_finished: false,
@@ -61,6 +62,7 @@ export default function Onboarding() {
   const [consumerKey, setConsumerKey] = useState<string>("");
   const [consumerSecret, setConsumerSecret] = useState<string>("");
   const [baseUrl, setBaseUrl] = useState<string>("");
+  const [hasConnection, setHasConnection] = useState(false);
   const [currentStep, setCurrentStep] = useState(0);
   const [onboardingSteps, setOnboardingSteps] = useState<IStep[]>();
   const [isLoading, setIsLoading] = useState(true);
@@ -102,7 +104,15 @@ export default function Onboarding() {
         setCurrentStep={setCurrentStep}
       />
     ),
-    4: <VerifyConnection token={token} storeId={storeId} />,
+    4: (
+      <VerifyConnection
+        token={token}
+        storeId={storeId}
+        hasConnection={hasConnection}
+        setHasConnection={setHasConnection}
+        setCurrentStep={setCurrentStep}
+      />
+    ),
     5: <Embedding token={token} storeId={storeId} />,
   };
 
@@ -131,16 +141,17 @@ export default function Onboarding() {
       setConsumerSecret(store.store_type.consumer_secret);
       setChannels(store.channels.map((channel) => channel.channel) || []);
 
+      let step = 1;
       // Check has a store
       if (store.store_type) {
         steps[0].is_finished = true;
-        setCurrentStep((prev) => prev + 1);
+        step++;
       }
 
       // Check has channels
       if (store.channels.length > 0) {
         steps[1].is_finished = true;
-        setCurrentStep((prev) => prev + 1);
+        step++;
       }
 
       // Check has connected store
@@ -150,9 +161,23 @@ export default function Onboarding() {
         store.store_type.base_url
       ) {
         steps[2].is_finished = true;
-        setCurrentStep((prev) => prev + 1);
+        step++;
       }
 
+      if (hasConnection) {
+        steps[3].is_finished = true;
+        step++;
+      } else {
+        // Ping connection in case of page refresh by user
+        if (token && store.id) {
+          const response = await verifyConnection(token, store.id);
+          if (response.ok) {
+            steps[3].is_finished = true;
+            step++;
+          }
+        }
+      }
+      setCurrentStep(step);
       setOnboardingSteps(steps);
       setIsLoading(false);
     };

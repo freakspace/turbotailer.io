@@ -270,12 +270,13 @@ class StoresViewSet(RetrieveModelMixin, ListModelMixin, GenericViewSet):
             return Response({"error": "You are not authenticated!"}, status=status.HTTP_401_UNAUTHORIZED)
         
     
-    @action(detail=False, methods=['get'])
+    @action(detail=False, methods=['post'])
     def ping_connection(self, request):
 
         store_id = request.data.get('store_id')
 
         if request.user.is_authenticated:
+            
             try:
                 store = Store.objects.filter(user=request.user, id=store_id).get()
             except Store.DoesNotExist:
@@ -293,10 +294,15 @@ class StoresViewSet(RetrieveModelMixin, ListModelMixin, GenericViewSet):
                     per_page=32
                     )
                 
-                woocommerce.ping()
+                response = woocommerce.ping()
+
+                if response.status_code == 200:
+                    return Response({"message": "Connection Established"})
+                else:
+                    return Response({"error": "We can't establish a connection to the store"}, status=status.HTTP_401_UNAUTHORIZED)
         
             except:
-                pass
+                return Response({"error": "We can't establish a connection to the store"}, status=status.HTTP_401_UNAUTHORIZED)
 
         else:
             return Response({"error": "You are not authenticated!"}, status=status.HTTP_401_UNAUTHORIZED)

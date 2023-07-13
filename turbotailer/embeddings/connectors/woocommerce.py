@@ -1,6 +1,7 @@
 from typing import List
 import json
 import logging
+import time
 
 from django.core.exceptions import BadRequest, PermissionDenied
 from django.utils.translation import gettext_lazy as _
@@ -11,29 +12,53 @@ from requests_oauthlib import OAuth1Session
 from langchain.docstore.document import Document
 
 from turbotailer.utils.crypto import decrypt_message
+from turbotailer.utils.utils import num_tokens_text
 
 # Define a logger
 logger = logging.getLogger(__name__)
 
-# Define the API endpoint as a constant
-PRODUCTS_ENDPOINT = "/wp-json/wc/v3/products"
 
 # TODO Initialize connector with channels (products, categories etc.)
 # TODO Check for https / http and change auth depending on it
+# TODO Prepare keys for each of the channels
 class WoocommerceConnector:
     def __init__(
             self, 
             base_url: str, 
+            channels: List[str],
             consumer_key: str, 
             consumer_secret: str, 
             per_page: int
             ):
         
         self.base_url = base_url
+        self.channels = channels
         self.consumer_key = consumer_key
         self.consumer_secret = consumer_secret
         self.per_page = per_page
         self.connection = None
+
+    @classmethod
+    def from_model(cls, store_id):
+        from turbotailer.stores.models import Store
+        store = Store.objects.get(id=store_id)
+        # TODO 32 should be set as store object?
+        return cls(
+            store.store_type.base_url, 
+            [channel.channel for channel in store.channels.all()],
+            store.store_type.consumer_key, 
+            store.store_type.consumer_secret, 
+            32)
+    
+    def print_all(self):
+        print(self.__dict__)
+
+    def validate_initialization(self):
+        """ Checks that class got all information """
+        for attr, value in self.__dict__.items():
+            if attr != 'connection' and not value:
+                raise ValueError(f"Attribute {attr} was not initialized")
+        print("All attributes were properly initialized.")
 
     def connect(self):
 
@@ -62,6 +87,7 @@ class WoocommerceConnector:
 
 
     def get_products(self):
+        PRODUCTS_ENDPOINT = "/wp-json/wc/v3/products"
         # Starts page at
         page_number = 1
 
@@ -101,32 +127,32 @@ class WoocommerceConnector:
                     raise Exception(_("Unknown error"))
     
     def extract_data(self, item: dict, keys: List[str]):
-            extracted_data = {}
-            for key, subkeys in keys.items():
-                
-                if subkeys is None:  # No subkeys, just extract the value directly
-                    if item.get(key):
-                        extracted_data[key] = item.get(key)
-                
-                else:
-                    nested_items = item.get(key, [])
-                    extracted_data[key] = []
-                    for nested_item in nested_items:
-                        #print(subkeys)
-                        nested_data = None
-                        for subkey in subkeys:
-                            if nested_item.get(subkey):
-                                #print(subkey)
-                                if isinstance(nested_item.get(subkey), list):
-                                    if key == "attributes":
-                                        nested_data = nested_item["name"] + ": " + ", ".join(nested_item.get(subkey))
-                                    else:
-                                        nested_data = subkey + ": " + ", ".join(nested_item.get(subkey))
+        extracted_data = {}
+        for key, subkeys in keys.items():
+            
+            if subkeys is None:  # No subkeys, just extract the value directly
+                if item.get(key):
+                    extracted_data[key] = item.get(key)
+            
+            else:
+                nested_items = item.get(key, [])
+                extracted_data[key] = []
+                for nested_item in nested_items:
+                    #print(subkeys)
+                    nested_data = None
+                    for subkey in subkeys:
+                        if nested_item.get(subkey):
+                            #print(subkey)
+                            if isinstance(nested_item.get(subkey), list):
+                                if key == "attributes":
+                                    nested_data = nested_item["name"] + ": " + ", ".join(nested_item.get(subkey))
                                 else:
-                                    nested_data = subkey +  ": " + nested_item.get(subkey)
-                        extracted_data[key].append(nested_data)
+                                    nested_data = subkey + ": " + ", ".join(nested_item.get(subkey))
+                            else:
+                                nested_data = subkey +  ": " + nested_item.get(subkey)
+                    extracted_data[key].append(nested_data)
 
-            return extracted_data
+        return extracted_data
 
     def create_document(self, item: dict, keys: List[str]):
         # Keys to add to metadata
@@ -163,3 +189,35 @@ class WoocommerceConnector:
                 document.metadata[key] = value
 
         return document
+    
+    async def calculate_tokens(self):
+        # TODO Check how many pages. If more than 10, calculate an averate
+        num_tokens = 0
+        item_count = 0
+        print("Calculating tokens..")
+
+        for channel in self.channels:
+            print(f"Calculating for {channel}")
+            method_name = f"get_{channel}"
+            # Get the appropriate method for each channel
+            
+            if hasattr(self, method_name):
+                print("Found attribute")
+                items = getattr(self, method_name)()
+                # Loop through each of the items (products, categories etc)
+                for item in items:
+                    num_tokens += num_tokens_text(json.dumps(item))
+
+                    item_count += 1
+
+                    yield f"{num_tokens},"
+
+                    """ if item_count == 50:
+                        break """
+    
+    async def generator(self):
+        num = 1
+        for a in range(0,10):
+            yield num
+            num += a
+            time.sleep(2)

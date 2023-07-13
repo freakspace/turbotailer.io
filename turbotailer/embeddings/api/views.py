@@ -6,6 +6,7 @@ from rest_framework.response import Response
 from rest_framework.authentication import SessionAuthentication, BasicAuthentication, TokenAuthentication
 from rest_framework.permissions import IsAuthenticated
 from rest_framework import viewsets
+from django.http import StreamingHttpResponse
 
 from ..models import EmbeddingTask, Channel
 
@@ -18,12 +19,6 @@ from ...utils.utils import is_valid_uuid
 class EmbeddingsViewSet(viewsets.ViewSet):
     authentication_classes = [TokenAuthentication, SessionAuthentication, BasicAuthentication]
     permission_classes = [IsAuthenticated]
-
-    def retrieve(self, request, pk=None):
-        """ Returns a message to all GET requests for a single object """
-        # Here you can handle `pk` to get an object from your database
-        # For now we just ignore `pk` and return a simple message
-        return Response({"message": "Hello, world!"})
     
     @action(detail=False, methods=['post'])
     def destroy_all(self, request):
@@ -116,8 +111,34 @@ class EmbeddingsViewSet(viewsets.ViewSet):
             return Response({"error": "No channel found"})
         else:
             return Response({"error": "You are not authenticated!"}, status=status.HTTP_401_UNAUTHORIZED)
-        
+    
+    @action(detail=False, methods=['post'])
+    def calculate_tokens(self, request):
 
-# TODO Create user
-# TODO Delete user
-# TODO Update user
+        from turbotailer.stores.models import Store
+
+        store_id = request.data.get('store_id')
+
+        if request.user.is_authenticated:
+            
+            try:
+                store = Store.objects.filter(user=request.user, id=store_id).get()
+            except Store.DoesNotExist:
+                return Response({"error": "Store doesn't exist"})
+
+            try:
+                # Get the connection class
+                connector = store.store_type.get_connection_class()
+                
+                woo = connector.from_model(store_id)
+
+                response =  StreamingHttpResponse(woo.calculate_tokens())
+
+                return response
+
+        
+            except Exception as e:
+                return Response({"error": f"{e}"}, status=status.HTTP_401_UNAUTHORIZED)
+
+        else:
+            return Response({"error": "You are not authenticated!"}, status=status.HTTP_401_UNAUTHORIZED)

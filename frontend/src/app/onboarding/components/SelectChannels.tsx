@@ -1,5 +1,4 @@
 import { useState } from "react";
-import { Button } from "react-aria-components";
 
 import StepWrapper from "./StepWrapper";
 

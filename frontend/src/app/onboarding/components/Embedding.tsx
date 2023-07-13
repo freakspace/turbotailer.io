@@ -1,7 +1,5 @@
 import { useEffect, useState } from "react";
 
-import { OpenAIStream, StreamingTextResponse } from "ai";
-
 import StepWrapper from "./StepWrapper";
 
 export default function Embedding({
@@ -40,7 +38,6 @@ export default function Embedding({
 
     try {
       while (true) {
-        console.log("Test");
         const { done, value } = await reader.read();
         if (done) return;
         let chunk = textDecoder.decode(value);

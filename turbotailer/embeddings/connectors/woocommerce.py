@@ -211,13 +211,3 @@ class WoocommerceConnector:
                     item_count += 1
 
                     yield f"{num_tokens},"
-
-                    """ if item_count == 50:
-                        break """
-    
-    async def generator(self):
-        num = 1
-        for a in range(0,10):
-            yield num
-            num += a
-            time.sleep(2)

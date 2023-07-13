@@ -177,6 +177,7 @@ export default function Onboarding() {
           }
         }
       }
+
       setCurrentStep(step);
       setOnboardingSteps(steps);
       setIsLoading(false);

@@ -33,6 +33,7 @@ from ..api.serializers import (
 from ..models import Store, WooCommerceStore, Channel
 from ...utils.crypto import encrypt_message
 from ...utils.utils import is_valid_uuid
+from turbotailer.embeddings.connectors.woocommerce import WoocommerceConnector
 
 
 # TODO Changing channel fields will need a complete re-embedding. Will automatically happen at next re-embed.
@@ -264,6 +265,38 @@ class StoresViewSet(RetrieveModelMixin, ListModelMixin, GenericViewSet):
             except Store.DoesNotExist:
                 return Response({"error": "Store doesn't exist"})
             return Response(serializer.data)
+
+        else:
+            return Response({"error": "You are not authenticated!"}, status=status.HTTP_401_UNAUTHORIZED)
+        
+    
+    @action(detail=False, methods=['get'])
+    def ping_connection(self, request):
+
+        store_id = request.data.get('store_id')
+
+        if request.user.is_authenticated:
+            try:
+                store = Store.objects.filter(user=request.user, id=store_id).get()
+            except Store.DoesNotExist:
+                    return Response({"error": "Store doesn't exist"})
+
+            try:
+                # Get the connection class
+                connector = store.store_type.get_connection_class()
+                
+                # Init the connection
+                woocommerce = connector(
+                    base_url=store.store_type.base_url,
+                    consumer_key=store.store_type.consumer_key, 
+                    consumer_secret=store.store_type.consumer_secret,
+                    per_page=32
+                    )
+                
+                woocommerce.ping()
+        
+            except:
+                pass
 
         else:
             return Response({"error": "You are not authenticated!"}, status=status.HTTP_401_UNAUTHORIZED)

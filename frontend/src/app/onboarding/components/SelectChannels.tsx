@@ -9,30 +9,36 @@ export default function SelectChannels({
   token,
   storeId,
   channels,
+  setChannels,
+  setCurrentStep,
 }: {
   token: string | null;
   storeId: string | undefined;
   channels: string[];
+  setChannels: React.Dispatch<React.SetStateAction<string[]>>;
+  setCurrentStep: React.Dispatch<React.SetStateAction<number>>;
 }) {
-  const [selected, setSelected] = useState<string[]>(channels);
   const [error, setError] = useState("");
 
   const createChannels = async () => {
-    if (channels.length > 0) {
+    if (channels.length === 0) {
       // Show error
+      console.log("Missing Channels");
       return;
     }
     if (!token) {
       // Show some error
+      console.log("Missing Token");
       return;
     }
 
     if (!storeId) {
       // Show some error
+      console.log("Missing Store");
       return;
     }
 
-    if (selected.length === 0) {
+    if (channels.length === 0) {
       setError("You need to select at least 1 channel");
       return;
     } else {
@@ -49,16 +55,19 @@ export default function SelectChannels({
         },
         body: JSON.stringify({
           store_id: storeId,
-          channels: selected,
+          channels: channels,
         }),
       }
     );
 
+    if (response.ok) {
+      setCurrentStep((prev) => prev + 1);
+    }
     const data = await response.json();
   };
 
   const handleClick = (id: string) => {
-    setSelected((prev) => {
+    setChannels((prev) => {
       const index = prev.indexOf(id);
 
       if (index > -1) {
@@ -68,13 +77,12 @@ export default function SelectChannels({
       }
     });
   };
-
-  const Card = ({ id, isDisabled }: { id: string; isDisabled: boolean }) => {
+  console.log(channels);
+  const Card = ({ id }: { id: string }) => {
     return (
       <button
-        disabled={isDisabled}
         className={`px-6 py-6 rounded-xl p-8 text-2xl capitalize ${
-          selected && selected.includes(id)
+          channels && channels.includes(id)
             ? "border border-solid border-pink-600"
             : "border border-solid border-gray-200"
         }`}
@@ -85,30 +93,23 @@ export default function SelectChannels({
       </button>
     );
   };
+
+  console.log(storeId);
   return (
     <StepWrapper>
       <h3 className="text-xl font-bold mb-5">Select Channels</h3>
       <div className="grid grid-cols-2 gap-4 mb-10">
         {availableChannels.map((channel, key) => (
-          <Card key={key} id={channel} isDisabled={channels.length > 0} />
+          <Card key={key} id={channel} />
         ))}
       </div>
       <div className="">
-        {channels.length > 0 ? (
-          <button
-            disabled
-            className="cursor-not-allowed bg-gray-500 text-white px-6 py-2 rounded-xl font-bold text-xl"
-          >
-            Saved
-          </button>
-        ) : (
-          <button
-            onClick={() => createChannels()}
-            className="bg-pink-600 hover:bg-pink-500 text-white px-6 py-2 rounded-xl font-bold text-xl"
-          >
-            Save & Continue
-          </button>
-        )}
+        <button
+          onClick={() => createChannels()}
+          className="bg-pink-600 hover:bg-pink-500 text-white px-6 py-2 rounded-xl font-bold text-xl"
+        >
+          Save & Continue
+        </button>
       </div>
       {error && <span className="text-sm text-red-600">{error}</span>}
     </StepWrapper>

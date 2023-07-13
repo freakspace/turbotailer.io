@@ -9,13 +9,20 @@ import StepWrapper from "./StepWrapper";
 export default function IntegrateWooCommerce({
   token,
   storeId,
+  consumerKey,
+  setConsumerKey,
+  consumerSecret,
+  setConsumerSecret,
+  setCurrentStep,
 }: {
   token: string | null;
   storeId: string | undefined;
+  consumerKey: string;
+  setConsumerKey: React.Dispatch<React.SetStateAction<string>>;
+  consumerSecret: string;
+  setConsumerSecret: React.Dispatch<React.SetStateAction<string>>;
+  setCurrentStep: React.Dispatch<React.SetStateAction<number>>;
 }) {
-  const [consumerKey, setConsumerKey] = useState("");
-  const [consumerSecret, setConsumerSecret] = useState("");
-
   const [consumerKeyError, setConsumerKeyError] = useState("");
   const [consumerSecretError, setConsumerSecretError] = useState("");
 
@@ -53,9 +60,10 @@ export default function IntegrateWooCommerce({
       consumerSecret
     );
 
+    if (response.ok) {
+      setCurrentStep((prev) => prev + 1);
+    }
     const data = await response.json();
-
-    console.log(data);
   };
 
   return (
@@ -77,7 +85,7 @@ export default function IntegrateWooCommerce({
           <label className="">Consumer Key</label>
           <input
             type="password"
-            value={consumerKey}
+            value={consumerKey.substring(0, 10)}
             onChange={(e) => setConsumerKey(e.target.value)}
             required
             className={
@@ -100,7 +108,7 @@ export default function IntegrateWooCommerce({
           <label className="">Consumer Secret</label>
           <input
             type="password"
-            value={consumerSecret}
+            value={consumerSecret.substring(0, 10)}
             onChange={(e) => setConsumerSecret(e.target.value)}
             required
             className={
@@ -142,7 +150,7 @@ export default function IntegrateWooCommerce({
             onClick={() => updateStore()}
             className="bg-pink-600 hover:bg-pink-500 text-white px-6 py-2 rounded-xl font-bold text-xl"
           >
-            Continue
+            Save & Continue
           </button>
         </div>
       </div>

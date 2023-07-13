@@ -10,8 +10,8 @@ export interface IStep {
 }
 
 export interface IWooCommerceType {
-  consumer_key: boolean,
-  consumer_secret: boolean,
+  consumer_key: string,
+  consumer_secret: string,
   base_url: string
 }
 

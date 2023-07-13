@@ -54,8 +54,14 @@ const spinner = {
 // TODO Add loading wheels
 
 export default function Onboarding() {
-  const [userStore, setUserStore] = useState<IStore>();
-  const [currentStep, setCurrentStep] = useState(1);
+  const [storeId, setStoreId] = useState<string>("");
+  const [storeType, setStoreType] = useState<string>("WooCommerce");
+  const [storeName, setStoreName] = useState<string>("");
+  const [channels, setChannels] = useState<string[]>([]);
+  const [consumerKey, setConsumerKey] = useState<string>("");
+  const [consumerSecret, setConsumerSecret] = useState<string>("");
+  const [baseUrl, setBaseUrl] = useState<string>("");
+  const [currentStep, setCurrentStep] = useState(0);
   const [onboardingSteps, setOnboardingSteps] = useState<IStep[]>();
   const [isLoading, setIsLoading] = useState(true);
   const { token, setToken } = useContext(UserContext) as IContext;
@@ -65,74 +71,92 @@ export default function Onboarding() {
     1: (
       <SelectStore
         token={token}
-        selectedProp="WooCommerce"
-        storeNameProp={userStore?.name}
-        baseUrlProp={userStore?.store_type.base_url}
-        storeIdProp={userStore?.id}
+        storeType={storeType}
+        setStoreType={setStoreType}
+        storeName={storeName}
+        setStoreName={setStoreName}
+        baseUrl={baseUrl}
+        setBaseUrl={setBaseUrl}
+        storeId={storeId}
+        setStoreId={setStoreId}
         setCurrentStep={setCurrentStep}
       />
     ),
     2: (
       <SelectChannels
         token={token}
-        storeId={userStore?.id}
-        channels={userStore?.channels.map((channel) => channel.channel) || []}
+        storeId={storeId}
+        channels={channels}
+        setChannels={setChannels}
+        setCurrentStep={setCurrentStep}
       />
     ),
-    3: <IntegrateWooCommerce token={token} storeId={userStore?.id} />,
-    4: <VerifyConnection token={token} storeId={userStore?.id} />,
-    5: <Embedding token={token} storeId={userStore?.id} />,
+    3: (
+      <IntegrateWooCommerce
+        token={token}
+        storeId={storeId}
+        consumerKey={consumerKey}
+        setConsumerKey={setConsumerKey}
+        consumerSecret={consumerSecret}
+        setConsumerSecret={setConsumerSecret}
+        setCurrentStep={setCurrentStep}
+      />
+    ),
+    4: <VerifyConnection token={token} storeId={storeId} />,
+    5: <Embedding token={token} storeId={storeId} />,
   };
 
-  const getUserStores = async () => {
-    const response = await fetch(
-      `http://127.0.0.1:8000/api/stores/get_user_stores/`,
-      {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: "Token " + token,
-        },
+  // Fetch Store and Prepare steps
+  useEffect(() => {
+    const getUserStores = async () => {
+      const response = await fetch(
+        `http://127.0.0.1:8000/api/stores/get_user_stores/`,
+        {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: "Token " + token,
+          },
+        }
+      );
+
+      let data = await response.json();
+
+      let store: IStore = data[0];
+
+      setStoreId(store.id);
+      setStoreName(store.name);
+      setBaseUrl(store.store_type.base_url);
+      setConsumerKey(store.store_type.consumer_key);
+      setConsumerSecret(store.store_type.consumer_secret);
+      setChannels(store.channels.map((channel) => channel.channel) || []);
+
+      // Check has a store
+      if (store.store_type) {
+        steps[0].is_finished = true;
+        setCurrentStep((prev) => prev + 1);
       }
-    );
 
-    const data = await response.json();
+      // Check has channels
+      if (store.channels.length > 0) {
+        steps[1].is_finished = true;
+        setCurrentStep((prev) => prev + 1);
+      }
 
-    setUserStore(data[0]);
-  };
+      // Check has connected store
+      if (
+        store.store_type.consumer_key &&
+        store.store_type.consumer_secret &&
+        store.store_type.base_url
+      ) {
+        steps[2].is_finished = true;
+        setCurrentStep((prev) => prev + 1);
+      }
 
-  // Prepare steps
-  useEffect(() => {
-    // Check has a store
-    if (userStore && "store_type" in userStore) {
-      steps[0].is_finished = true;
-      setCurrentStep((prev) => prev + 1);
-    }
+      setOnboardingSteps(steps);
+      setIsLoading(false);
+    };
 
-    // Check has channels
-    if (userStore && userStore.channels.length > 0) {
-      steps[1].is_finished = true;
-      setCurrentStep((prev) => prev + 1);
-    }
-
-    // Check has connected store
-    if (
-      userStore &&
-      userStore.store_type.consumer_key &&
-      userStore.store_type.consumer_secret &&
-      userStore.store_type.base_url
-    ) {
-      steps[2].is_finished = true;
-      setCurrentStep((prev) => prev + 1);
-    }
-
-    setOnboardingSteps(steps);
-
-    setIsLoading(false);
-  }, [userStore]);
-
-  // Fetch the store
-  useEffect(() => {
     getUserStores();
   }, []);
 
@@ -155,7 +179,7 @@ export default function Onboarding() {
               There are only 5 steps, and we'll guide you through all of them.
             </p>
           </div>
-          <div className="h-48">VIDEO</div>
+          <div className=""></div>
         </div>
         <div className="grid grid-cols-3 gap-8 items-start">
           <div className="grid grid-rows-1 gap-4 border border-solid border-gray-200 rounded-xl p-8 bg-white">

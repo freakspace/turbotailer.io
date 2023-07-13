@@ -10,25 +10,29 @@ import StepWrapper from "./StepWrapper";
 
 interface SelectStoreStep {
   token: string | null;
-  selectedProp: string;
-  storeNameProp: string | undefined;
-  baseUrlProp: string | undefined;
-  storeIdProp: string | undefined;
+  storeType: string;
+  setStoreType: React.Dispatch<React.SetStateAction<string>>;
+  storeName: string | undefined;
+  setStoreName: React.Dispatch<React.SetStateAction<string>>;
+  baseUrl: string | undefined;
+  setBaseUrl: React.Dispatch<React.SetStateAction<string>>;
+  storeId: string | undefined;
+  setStoreId: React.Dispatch<React.SetStateAction<string>>;
   setCurrentStep: React.Dispatch<React.SetStateAction<number>>;
 }
 
 function SelectStore({
   token,
-  selectedProp,
-  storeNameProp,
-  baseUrlProp,
-  storeIdProp,
+  storeType,
+  setStoreType,
+  storeName,
+  setStoreName,
+  baseUrl,
+  setBaseUrl,
+  storeId,
+  setStoreId,
   setCurrentStep,
 }: SelectStoreStep) {
-  const [selected, setSelected] = useState(selectedProp);
-  const [storeName, setStoreName] = useState(storeNameProp);
-  const [baseUrl, setBaseUrl] = useState(baseUrlProp);
-
   const [storeNameError, setStoreNameError] = useState("");
   const [baseUrlError, setBaseUrlError] = useState("");
   const [storeTypeError, setStoreTypeError] = useState("");
@@ -53,7 +57,7 @@ function SelectStore({
       setBaseUrlError("");
     }
 
-    if (!selected) {
+    if (!storeType) {
       setStoreTypeError("You need to select a store type");
       return;
     } else {
@@ -61,11 +65,11 @@ function SelectStore({
     }
 
     // TODO Only call endpoint if data changed?
-    if (selected === "WooCommerce") {
-      if (storeIdProp) {
+    if (storeType === "WooCommerce") {
+      if (storeId) {
         const response = await updateWooCommerce(
           token,
-          storeIdProp,
+          storeId,
           storeName,
           baseUrl
         );
@@ -86,12 +90,12 @@ function SelectStore({
     return (
       <button
         className={`px-6 py-6 rounded-xl p-8 text-2xl ${
-          id === selected
+          id === storeType
             ? "border border-solid border-pink-600"
             : "border border-solid border-gray-200"
         }`}
         id={id}
-        onClick={(e) => setSelected((e.target as HTMLElement).id)}
+        onClick={(e) => setStoreType((e.target as HTMLElement).id)}
       >
         {id}
       </button>
@@ -170,7 +174,7 @@ function SelectStore({
           onClick={() => createStore()}
           className="bg-pink-600 hover:bg-pink-500 text-white px-6 py-2 rounded-xl font-bold text-xl"
         >
-          Continue
+          Save & Continue
         </button>
       </div>
       {storeTypeError && (

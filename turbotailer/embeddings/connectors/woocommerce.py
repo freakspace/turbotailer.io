@@ -49,6 +49,14 @@ class WoocommerceConnector:
             logger.error(e)
             raise PermissionDenied(_("Incorrect API keys"))
 
+
+    def ping(self):
+        if not self.connection:
+            self.connect()
+            print("Kig Under")            
+            print(self.connection)
+
+
     def get_products(self):
         # Starts page at
         page_number = 1

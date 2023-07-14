@@ -2,6 +2,8 @@ import { useState } from "react";
 
 import Button from "@/app/components/Button";
 
+import Link from "next/link";
+
 import { updateWooCommerce } from "../services";
 
 import StepWrapper from "./StepWrapper";
@@ -81,8 +83,8 @@ export default function IntegrateWooCommerce({
               {connectionError}
             </div>
           )}
-          <h3 className="text-xl font-bold mb-5">
-            Create and add your WooCommerce API keys
+          <h3 className="text-2xl font-bold mb-5">
+            Add your WooCommerce API keys
           </h3>
           <p className="text-lg mb-3">
             We'll need read access to your API, which we will parse with our
@@ -94,7 +96,7 @@ export default function IntegrateWooCommerce({
               "flex flex-col mb-4"
             }
           >
-            <label className="">Consumer Key</label>
+            <label className="text-lg">Consumer Key</label>
             <input
               type="password"
               value={consumerKey}
@@ -117,7 +119,7 @@ export default function IntegrateWooCommerce({
               "flex flex-col"
             }
           >
-            <label className="">Consumer Secret</label>
+            <label className="text-lg">Consumer Secret</label>
             <input
               type="password"
               value={consumerSecret}
@@ -130,6 +132,12 @@ export default function IntegrateWooCommerce({
                 "h-10 rounded-md focus:border-2 focus:border-pink-600 focus:outline-none"
               }
             />
+            <span className="text-sm mt-2">
+              Unsure where to find your API keys?{" "}
+              <Link href="#" className="text-pink-600 font-bold">
+                Follow this guide
+              </Link>
+            </span>
             {consumerSecretError && (
               <span className="text-sm text-red-600">
                 {consumerSecretError}
@@ -138,10 +146,14 @@ export default function IntegrateWooCommerce({
           </div>
         </div>
         <div className="mb-12">
-          <h3 className="text-xl font-bold mb-5">
-            Add this script just before your closing &lt;/head&gt; tag
+          <h3 className="text-2xl font-bold mb-5">
+            Add two scripts to your website
           </h3>
-          <pre className="bg-gray-600 p-8 text-white rounded-xl border border-solid border-black mb-5">
+          <p className="text-lg mb-3">
+            1. Add this script just before your closing{" "}
+            <strong>&lt;/head&gt;</strong> tag
+          </p>
+          <pre className="bg-gray-500 p-8 text-white rounded-xl border border-solid border-black mb-5">
             <code>
               {
                 "<script src='https://turbotailer.io/static/js/turbotailer.js'></script>"
@@ -150,10 +162,11 @@ export default function IntegrateWooCommerce({
           </pre>
         </div>
         <div className="mb-12">
-          <h3 className="text-xl font-bold mb-5">
-            Add this script just before your closing &lt;/body&gt; tag
-          </h3>
-          <pre className="bg-gray-600 p-8 text-white rounded-xl border border-solid border-black mb-5">
+          <p className="text-lg mb-3">
+            2. Add this script just before your closing{" "}
+            <strong>&lt;/body&gt;</strong> tag
+          </p>
+          <pre className="bg-gray-500 p-8 text-white rounded-xl border border-solid border-black mb-5">
             <code>
               {`<script>\n    window.addEventListener('DOMContentLoaded', () => {\n        initializeChatbot('${storeId}');\n    });\n</script>`}
             </code>

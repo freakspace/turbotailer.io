@@ -31,7 +31,7 @@ let steps: IStep[] = [
   {
     is_finished: false,
     number: 4,
-    description: "Verify Connection",
+    description: "Verifying Connection",
   },
   {
     is_finished: false,
@@ -124,8 +124,6 @@ export default function Onboarding() {
     ),
     5: <Embedding token={token} storeId={storeId} />,
   };
-
-  const evaluateSteps = () => {};
 
   // Fetch Store and Prepare steps
   useEffect(() => {

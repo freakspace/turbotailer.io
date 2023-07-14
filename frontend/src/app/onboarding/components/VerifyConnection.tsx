@@ -34,9 +34,8 @@ export default function VerifyConnection({
 
     setIsConnecting(true);
 
-    console.log("Pinging");
     const response = await verifyConnection(token, storeId);
-    console.log(response);
+
     if (response.ok) {
       setHasConnection(true);
       setIsConnecting(false);
@@ -44,7 +43,7 @@ export default function VerifyConnection({
       // Wait 3 seconds before next step
       setTimeout(() => {
         setCurrentStep((prev) => prev + 1);
-      }, 3000);
+      }, 2000);
     } else {
       setConnectionError("We can't establish a connection");
     }
@@ -66,7 +65,7 @@ export default function VerifyConnection({
   return (
     <StepWrapper>
       <div className="">
-        <h3 className="text-xl font-bold mb-5">Verify Connection</h3>
+        <h3 className="text-xl font-bold mb-5">Verifying Connection</h3>
         <p className="text-lg mb-5">
           We'll ping your API to check if there is a connection
         </p>
@@ -91,9 +90,9 @@ export default function VerifyConnection({
               Connected
             </button>
           ) : isConnecting ? (
-            <button className="inline-flex items-center px-6 py-2 rounded-xl font-bold text-xl border border-2 border-solid border-gray-600">
+            <button className="inline-flex items-center px-6 py-2 rounded-xl font-bold text-xl border border-2 border-solid border-pink-600">
               <motion.div
-                className="w-6 h-6 border-t-2 border-pink-600 rounded-full"
+                className="w-6 h-6 border-t-2 border-pink-600 rounded-full mr-2"
                 animate={spinner.animate}
                 transition={spinner.transition}
               />

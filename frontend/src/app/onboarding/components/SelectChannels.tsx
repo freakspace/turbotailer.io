@@ -98,7 +98,11 @@ export default function SelectChannels({
   console.log(storeId);
   return (
     <StepWrapper>
-      <h3 className="text-xl font-bold mb-5">Select Channels</h3>
+      <h3 className="text-2xl font-bold mb-3">Select Channels</h3>
+      <p className="text-lg mb-5">
+        These channels will be included and available from the chat. You can
+        change these settings in your dashboard.
+      </p>
       <div className="grid grid-cols-2 gap-4 mb-10">
         {availableChannels.map((channel, key) => (
           <Card key={key} id={channel} />

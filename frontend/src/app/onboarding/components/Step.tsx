@@ -15,18 +15,6 @@ export default function Step({
   setCurrentStep: React.Dispatch<React.SetStateAction<number>>;
   isLoading: boolean;
 }) {
-  /* const controls = useAnimation();
-
-  useEffect(() => {
-    if (!isLoading) {
-      controls.start({
-        opacity: 1,
-        x: 0,
-        transition: { duration: 0.75 },
-      });
-    }
-  }, [isLoading, controls]); */
-
   const controls = useAnimation();
   useEffect(() => {
     controls.start({

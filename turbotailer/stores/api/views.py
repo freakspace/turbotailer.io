@@ -8,6 +8,7 @@
 # TODO Delete store type
 # TODO Update store type
 
+from urllib.parse import urlparse
 
 from django.db import transaction
 from django.contrib.contenttypes.models import ContentType
@@ -32,7 +33,7 @@ from ..api.serializers import (
     )
 from ..models import Store, WooCommerceStore, Channel
 from ...utils.crypto import encrypt_message
-from ...utils.utils import is_valid_uuid
+from ...utils.utils import is_valid_uuid, sanitize_url
 from turbotailer.embeddings.connectors.woocommerce import WoocommerceConnector
 
 
@@ -119,14 +120,15 @@ class StoresViewSet(RetrieveModelMixin, ListModelMixin, GenericViewSet):
             consumer_key = request.data.get('consumer_key')
             consumer_secret = request.data.get('consumer_secret')
             base_url = request.data.get('base_url')
+            
+            sanitized_url = sanitize_url(base_url)
 
             try:
                 with transaction.atomic():
-
                     woo = WooCommerceStore.objects.create(
                         consumer_key = encrypt_message(consumer_key) if consumer_key else None,
                         consumer_secret = encrypt_message(consumer_secret) if consumer_secret else None,
-                        base_url = base_url
+                        base_url = sanitized_url
                     )
 
                     woo_content_type = ContentType.objects.get_for_model(WooCommerceStore)
@@ -272,36 +274,31 @@ class StoresViewSet(RetrieveModelMixin, ListModelMixin, GenericViewSet):
     
     @action(detail=False, methods=['post'])
     def ping_connection(self, request):
-
         store_id = request.data.get('store_id')
 
         if request.user.is_authenticated:
-            
             try:
                 store = Store.objects.filter(user=request.user, id=store_id).get()
             except Store.DoesNotExist:
                     return Response({"error": "Store doesn't exist"})
 
             try:
+
                 # Get the connection class
                 connector = store.store_type.get_connection_class()
-                
+
                 # Init the connection
-                woocommerce = connector(
-                    base_url=store.store_type.base_url,
-                    consumer_key=store.store_type.consumer_key, 
-                    consumer_secret=store.store_type.consumer_secret,
-                    per_page=32
-                    )
-                
+                woocommerce = connector.from_model(store_id)
+
                 response = woocommerce.ping()
 
                 if response.status_code == 200:
                     return Response({"message": "Connection Established"})
                 else:
                     return Response({"error": "We can't establish a connection to the store"}, status=status.HTTP_401_UNAUTHORIZED)
-        
+
             except:
+
                 return Response({"error": "We can't establish a connection to the store"}, status=status.HTTP_401_UNAUTHORIZED)
 
         else:

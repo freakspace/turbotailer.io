@@ -79,12 +79,11 @@ class WoocommerceConnector:
         if not self.connection:
             self.connect()
 
-        url = self.base_url + '/wp-json/wc/v3'
-
+        url = "http://" + self.base_url + '/wp-json/wc/v3'
+        print(url)
         response = self.connection.get(url)
 
         return response
-
 
     def get_products(self):
         PRODUCTS_ENDPOINT = "/wp-json/wc/v3/products"
@@ -96,7 +95,7 @@ class WoocommerceConnector:
             self.connect()
         
         while True:
-            url = f"{self.base_url}{PRODUCTS_ENDPOINT}?per_page={self.per_page}&page={page_number}"
+            url = f"https://{self.base_url}{PRODUCTS_ENDPOINT}?per_page={self.per_page}&page={page_number}"
 
             logger.info(f"Calling: {url}")
 

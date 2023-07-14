@@ -15,7 +15,7 @@ export default function Step({
   setCurrentStep: React.Dispatch<React.SetStateAction<number>>;
   isLoading: boolean;
 }) {
-  const controls = useAnimation();
+  /* const controls = useAnimation();
 
   useEffect(() => {
     if (!isLoading) {
@@ -25,24 +25,35 @@ export default function Step({
         transition: { duration: 0.75 },
       });
     }
-  }, [isLoading, controls]);
+  }, [isLoading, controls]); */
+
+  const controls = useAnimation();
+  useEffect(() => {
+    controls.start({
+      opacity: 1,
+      x: 0,
+      transition: { duration: 0.25 },
+    });
+  });
+
+  const itemVariants = {
+    normal: { flexGrow: 0, transition: { duration: 0.25 } },
+    active: { flexGrow: 1, transition: { duration: 0.25 } },
+  };
 
   return (
-    <motion.button
-      animate={controls}
-      initial={{ opacity: 0, x: -100 }}
-      onClick={() => setCurrentStep(step.number)}
-      className={`flex items-center justify-between border px-4 py-2 rounded-lg text-left ${
-        step.number === currentStep ? "border border-solid border-pink-600" : ``
+    <motion.div
+      onClick={() => setCurrentStep((prev) => prev + 1)}
+      className={`flex items-center justify-between border border-2 px-4 py-2 rounded-xl flex-none bg-white ${
+        step.number === currentStep
+          ? "border border-2 border-solid border-pink-600 text-pink-600"
+          : ``
       }`}
+      variants={itemVariants} // set the variants
+      initial="normal" // set the initial state
+      animate={step.number === currentStep ? "active" : "normal"} // animate depending on the state
     >
-      <div className="flex items-center justify-center h-8 w-8 rounded-full border border-solid border-pink-600">
-        <span className="text-lg">{step.number}</span>
-      </div>
-      <span className={(step.is_finished ? "line-through " : "") + "ml-4 grow"}>
-        {step.description}
-      </span>
-      {step.is_finished && (
+      {step.is_finished ? (
         <svg
           xmlns="http://www.w3.org/2000/svg"
           fill="none"
@@ -57,7 +68,13 @@ export default function Step({
             d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
           />
         </svg>
+      ) : step.number === currentStep ? (
+        <span className="w-full ml-4 font-bold text-center text-lg">
+          {step.description}
+        </span>
+      ) : (
+        <span className="text-lg text-center  ">{step.number}</span>
       )}
-    </motion.button>
+    </motion.div>
   );
 }

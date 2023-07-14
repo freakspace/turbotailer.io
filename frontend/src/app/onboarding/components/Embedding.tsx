@@ -64,7 +64,7 @@ export default function Embedding({
             type="text"
             disabled
             className="border-solid border border-gray-300 px-3 py-2 rounded-md bg-gray-50"
-            value="003-ada-text-embeddings"
+            value="text-embedding-ada-002"
           />
         </div>
         <h4 className="text-xl font-bold mb-5">Calculate Cost</h4>

@@ -2,6 +2,8 @@ import { useState } from "react";
 
 import StepWrapper from "./StepWrapper";
 
+import Button from "@/app/components/Button";
+
 const availableChannels = ["products", "categories", "pages", "orders"];
 
 export default function SelectChannels({
@@ -76,14 +78,14 @@ export default function SelectChannels({
       }
     });
   };
-  console.log(channels);
+
   const Card = ({ id }: { id: string }) => {
     return (
       <button
-        className={`px-6 py-6 rounded-xl p-8 text-2xl capitalize ${
+        className={`px-6 py-6 rounded-xl p-8 text-2xl capitalize border border-2 border-solid ${
           channels && channels.includes(id)
-            ? "border border-solid border-pink-600"
-            : "border border-solid border-gray-200"
+            ? "border-pink-600"
+            : "border-gray-200"
         }`}
         id={id}
         onClick={(e) => handleClick((e.target as HTMLElement).id)}
@@ -103,12 +105,7 @@ export default function SelectChannels({
         ))}
       </div>
       <div className="">
-        <button
-          onClick={() => createChannels()}
-          className="bg-pink-600 hover:bg-pink-500 text-white px-6 py-2 rounded-xl font-bold text-xl"
-        >
-          Save & Continue
-        </button>
+        <Button onClick={() => createChannels()}>Save & Continue</Button>
       </div>
       {error && <span className="text-sm text-red-600">{error}</span>}
     </StepWrapper>

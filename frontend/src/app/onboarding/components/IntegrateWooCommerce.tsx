@@ -1,6 +1,6 @@
 import { useState } from "react";
 
-const storeTypes = ["WooCommerce", "Magento", "Prestashop", "Shopify"];
+import Button from "@/app/components/Button";
 
 import { updateWooCommerce } from "../services";
 
@@ -10,18 +10,24 @@ export default function IntegrateWooCommerce({
   token,
   storeId,
   consumerKey,
-  setConsumerKey,
   consumerSecret,
+  connectionError,
+  setConsumerKey,
   setConsumerSecret,
   setCurrentStep,
+  setIsConnecting,
+  setConnectionError,
 }: {
   token: string | null;
   storeId: string | undefined;
   consumerKey: string;
-  setConsumerKey: React.Dispatch<React.SetStateAction<string>>;
   consumerSecret: string;
+  connectionError: string;
+  setConsumerKey: React.Dispatch<React.SetStateAction<string>>;
   setConsumerSecret: React.Dispatch<React.SetStateAction<string>>;
   setCurrentStep: React.Dispatch<React.SetStateAction<number>>;
+  setIsConnecting: React.Dispatch<React.SetStateAction<boolean>>;
+  setConnectionError: React.Dispatch<React.SetStateAction<string>>;
 }) {
   const [consumerKeyError, setConsumerKeyError] = useState("");
   const [consumerSecretError, setConsumerSecretError] = useState("");
@@ -69,60 +75,69 @@ export default function IntegrateWooCommerce({
   return (
     <StepWrapper>
       <div className="">
-        <h3 className="text-xl font-bold mb-5">
-          Create and add your WooCommerce API keys
-        </h3>
-        <p className="text-lg mb-3">
-          We'll need read access to your API, which we will parse with our robot
-          and prepare your Turbotailer
-        </p>
-        <div
-          className={
-            (consumerKeyError ? "border-solid border-red-600 " : "") +
-            "flex flex-col mb-4"
-          }
-        >
-          <label className="">Consumer Key</label>
-          <input
-            type="password"
-            value={consumerKey.substring(0, 10)}
-            onChange={(e) => setConsumerKey(e.target.value)}
-            required
-            className={
-              (consumerKeyError
-                ? "border-solid border border-red-600 "
-                : "border-solid border border-gray-300 ") +
-              "h-10 rounded-md focus:border-2 focus:border-pink-600 focus:outline-none"
-            }
-          />
-          {consumerKeyError && (
-            <span className="text-sm text-red-600">{consumerKeyError}</span>
+        <div className="mb-12">
+          {connectionError && (
+            <div className="text-red-600 border border-2 border-solid border-red-700 rounded-xl py-2 px-4 mb-5">
+              {connectionError}
+            </div>
           )}
-        </div>
-        <div
-          className={
-            (consumerSecretError ? "border-solid border-red-600 " : "") +
-            "flex flex-col mb-8"
-          }
-        >
-          <label className="">Consumer Secret</label>
-          <input
-            type="password"
-            value={consumerSecret.substring(0, 10)}
-            onChange={(e) => setConsumerSecret(e.target.value)}
-            required
+          <h3 className="text-xl font-bold mb-5">
+            Create and add your WooCommerce API keys
+          </h3>
+          <p className="text-lg mb-3">
+            We'll need read access to your API, which we will parse with our
+            robot and prepare your Turbotailer
+          </p>
+          <div
             className={
-              (consumerSecretError
-                ? "border-solid border border-red-600 "
-                : "border-solid border border-gray-300 ") +
-              "h-10 rounded-md focus:border-2 focus:border-pink-600 focus:outline-none"
+              (consumerKeyError ? "border-solid border-red-600 " : "") +
+              "flex flex-col mb-4"
             }
-          />
-          {consumerSecretError && (
-            <span className="text-sm text-red-600">{consumerSecretError}</span>
-          )}
+          >
+            <label className="">Consumer Key</label>
+            <input
+              type="password"
+              value={consumerKey}
+              onChange={(e) => setConsumerKey(e.target.value)}
+              required
+              className={
+                (consumerKeyError
+                  ? "border-solid border border-red-600 "
+                  : "border-solid border border-gray-300 ") +
+                "h-10 rounded-md focus:border-2 focus:border-pink-600 focus:outline-none"
+              }
+            />
+            {consumerKeyError && (
+              <span className="text-sm text-red-600">{consumerKeyError}</span>
+            )}
+          </div>
+          <div
+            className={
+              (consumerSecretError ? "border-solid border-red-600 " : "") +
+              "flex flex-col"
+            }
+          >
+            <label className="">Consumer Secret</label>
+            <input
+              type="password"
+              value={consumerSecret}
+              onChange={(e) => setConsumerSecret(e.target.value)}
+              required
+              className={
+                (consumerSecretError
+                  ? "border-solid border border-red-600 "
+                  : "border-solid border border-gray-300 ") +
+                "h-10 rounded-md focus:border-2 focus:border-pink-600 focus:outline-none"
+              }
+            />
+            {consumerSecretError && (
+              <span className="text-sm text-red-600">
+                {consumerSecretError}
+              </span>
+            )}
+          </div>
         </div>
-        <div className="mb-8">
+        <div className="mb-12">
           <h3 className="text-xl font-bold mb-5">
             Add this script just before your closing &lt;/head&gt; tag
           </h3>
@@ -134,7 +149,7 @@ export default function IntegrateWooCommerce({
             </code>
           </pre>
         </div>
-        <div className="mb-8">
+        <div className="mb-12">
           <h3 className="text-xl font-bold mb-5">
             Add this script just before your closing &lt;/body&gt; tag
           </h3>
@@ -146,12 +161,7 @@ export default function IntegrateWooCommerce({
         </div>
 
         <div className="">
-          <button
-            onClick={() => updateStore()}
-            className="bg-pink-600 hover:bg-pink-500 text-white px-6 py-2 rounded-xl font-bold text-xl"
-          >
-            Save & Continue
-          </button>
+          <Button onClick={() => updateStore()}>Save & Continue</Button>
         </div>
       </div>
     </StepWrapper>

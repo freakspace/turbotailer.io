@@ -9,31 +9,37 @@ export default function VerifyConnection({
   token,
   storeId,
   hasConnection,
+  isConnecting,
+  connectionError,
+  setIsConnecting,
   setHasConnection,
   setCurrentStep,
+  setConnectionError,
 }: {
   token: string | null;
   storeId: string | undefined;
   hasConnection: boolean;
+  isConnecting: boolean;
+  connectionError: string;
+  setIsConnecting: React.Dispatch<React.SetStateAction<boolean>>;
   setHasConnection: React.Dispatch<React.SetStateAction<boolean>>;
   setCurrentStep: React.Dispatch<React.SetStateAction<number>>;
+  setConnectionError: React.Dispatch<React.SetStateAction<string>>;
 }) {
-  const [connectionError, setConnectionError] = useState("");
-  const [isVerifying, setIsverifying] = useState(false);
-
   const handleVerification = async () => {
     if (!token || !storeId) {
       setConnectionError("You need to be logged in");
       return;
     }
 
-    setIsverifying(true);
+    setIsConnecting(true);
 
+    console.log("Pinging");
     const response = await verifyConnection(token, storeId);
-
+    console.log(response);
     if (response.ok) {
       setHasConnection(true);
-      setIsverifying(false);
+      setIsConnecting(false);
       setConnectionError("");
       // Wait 3 seconds before next step
       setTimeout(() => {
@@ -84,7 +90,7 @@ export default function VerifyConnection({
               </svg>
               Connected
             </button>
-          ) : isVerifying ? (
+          ) : isConnecting ? (
             <button className="inline-flex items-center px-6 py-2 rounded-xl font-bold text-xl border border-2 border-solid border-gray-600">
               <motion.div
                 className="w-6 h-6 border-t-2 border-pink-600 rounded-full"

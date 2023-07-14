@@ -2,6 +2,8 @@ import { useState, useEffect } from "react";
 
 import { motion, useAnimation } from "framer-motion";
 
+import Button from "@/app/components/Button";
+
 const storeTypes = ["WooCommerce", "Magento", "Prestashop", "Shopify"];
 
 import { createWooCommerce, updateWooCommerce } from "../services";
@@ -67,6 +69,7 @@ function SelectStore({
     // TODO Only call endpoint if data changed?
     if (storeType === "WooCommerce") {
       if (storeId) {
+        console.log("TEST A");
         const response = await updateWooCommerce(
           token,
           storeId,
@@ -78,9 +81,14 @@ function SelectStore({
           setCurrentStep((prev) => prev + 1);
         }
       } else {
+        console.log("TEST B");
+        console.log(storeName);
+        console.log(baseUrl);
         const response = await createWooCommerce(token, storeName, baseUrl);
         if (response.ok) {
           setCurrentStep((prev) => prev + 1);
+        } else {
+          // NEED ERROR HERE
         }
       }
     }
@@ -170,12 +178,7 @@ function SelectStore({
         ))}
       </div>
       <div className="">
-        <button
-          onClick={() => createStore()}
-          className="bg-pink-600 hover:bg-pink-500 text-white px-6 py-2 rounded-xl font-bold text-xl"
-        >
-          Save & Continue
-        </button>
+        <Button onClick={() => createStore()}>Save & Continue</Button>
       </div>
       {storeTypeError && (
         <span className="text-sm text-red-600">{storeTypeError}</span>

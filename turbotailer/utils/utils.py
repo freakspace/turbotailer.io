@@ -16,3 +16,12 @@ def num_tokens_text(text, model="text-embedding-ada-002"):
         encoding = tiktoken.get_encoding("cl100k_base")
 
     return len(encoding.encode(text))
+
+def sanitize_url(url):
+    if url.startswith('http://'):
+        url = url[7:]
+    if url.startswith('https://'):
+        url = url[8:]
+    if url.endswith('/'):
+        url = url[:-1]
+    return url

@@ -1,6 +1,5 @@
 
 import uuid
-import json
 
 from django.db import models
 from django.contrib.contenttypes.fields import GenericForeignKey
@@ -81,7 +80,6 @@ class WooCommerceStore(models.Model):
 
     def get_connection_class(self):
         return self.connection_class
-
 
 
 class Channel(models.Model):

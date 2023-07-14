@@ -18,7 +18,7 @@ export default function StepWrapper({
 
   return (
     <motion.div animate={controls} initial={{ opacity: 0, x: -100 }}>
-      <div className="border border-solid border-gray-200 rounded-xl p-8 bg-white">
+      <div className="border border-2 border-solid border-gray-200 rounded-xl p-8 bg-white shadow-xl">
         {children}
       </div>
     </motion.div>

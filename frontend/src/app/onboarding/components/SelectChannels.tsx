@@ -47,7 +47,7 @@ export default function SelectChannels({
     }
 
     const response = await fetch(
-      `http://127.0.0.1:8000/api/stores/create_channel/`,
+      `${process.env.NEXT_PUBLIC_DJANGO_API_URL}/api/stores/create_channel/`,
       {
         method: "POST",
         headers: {

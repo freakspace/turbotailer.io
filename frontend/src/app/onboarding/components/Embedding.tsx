@@ -17,7 +17,7 @@ export default function Embedding({
   const calculateTokens = async () => {
     setIsEstimating(true);
     const response = await fetch(
-      `http://127.0.0.1:8000/api/embeddings/calculate_tokens/`,
+      `${process.env.NEXT_PUBLIC_DJANGO_API_URL}/api/embeddings/calculate_tokens/`,
       {
         method: "POST",
         headers: {

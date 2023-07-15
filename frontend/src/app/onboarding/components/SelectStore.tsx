@@ -69,7 +69,6 @@ function SelectStore({
     // TODO Only call endpoint if data changed?
     if (storeType === "WooCommerce") {
       if (storeId) {
-        console.log("TEST A");
         const response = await updateWooCommerce(
           token,
           storeId,
@@ -81,9 +80,6 @@ function SelectStore({
           setCurrentStep((prev) => prev + 1);
         }
       } else {
-        console.log("TEST B");
-        console.log(storeName);
-        console.log(baseUrl);
         const response = await createWooCommerce(token, storeName, baseUrl);
         if (response.ok) {
           setCurrentStep((prev) => prev + 1);

@@ -1,108 +1,55 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useRef, useEffect } from "react";
 
+import Input from "./components/Input";
+
+import Search from "./components/Search";
 export default function Home() {
-  const [name, setName] = useState("");
-  const [email, setEmail] = useState("");
-  const [nameError, setNameError] = useState("");
-  const [emailError, setEmailError] = useState("");
-  const [consent, setConsent] = useState(false);
-  const [consentError, setConsentError] = useState("");
-  const [serverErrors, setServerErrors] = useState([]);
-
-  const handleSubmit = () => {};
   return (
-    <div className="">
-      <div className="container mx-auto">
-        <div className="flex justify-center items-center h-screen">
-          <div className="w-1/2">
-            <div className="bg-gray-50 rounded-2xl border border-solid border-gray-300 p-10 shadow-xl">
-              <h2 className="text-5xl mb-3 text-pink-600 font-bold">
-                Get $20 worth of OpenAI credits
+    <div className="container mx-auto">
+      <div className="flex justify-center items-center md:h-screen p-6">
+        <div className="">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-16">
+            <div className="">
+              <span className="text-sm inline-block border px-3 py-2 bg-gray-100 rounded-full mb-4 text-gray-500">
+                Subscribe and receive $20 worth of OpenAI creditstext
+              </span>
+              <h1 className="text-4xl md:text-7xl mb-3 md:mb-6">
+                <span className="font-bold">Turbocharge</span> your store with{" "}
+                <span className="font-bold">AI</span>
+              </h1>
+              <h2 className="text-xl md:text-3xl mb-6 md:mb-12">
+                Let your customers chat with your products, categories, pages
+                and orders, and give them the answers they need instantly.
               </h2>
-              <p className="text-lg mb-5 font-bold">
-                Create an account to get started
+              <div className="bg-gray-100 px-4 md:px-8 py-4 md:py-8 rounded-xl shadow-xl shadow-gray-200 border border-white">
+                <h3 className="text-2xl text-gray-800 font-bold mb-3">
+                  Get 20$ Worth of Credits
+                </h3>
+                <p className="mb-6 text-gray-800">
+                  We&apos;ll notify you as soon as we launch, and credit you
+                  with 20$ worth of embeddings and OpenAI queries to your
+                  Turbotailer account.
+                </p>
+                <div className="flex flex-col md:flex-row gap-4">
+                  <Input placeholder="Name" />
+                  <Input placeholder="Email" />
+                  <button className="bg-black text-white flex-1 rounded-lg text-lg font-bold">
+                    Subscribe
+                  </button>
+                </div>
+              </div>
+            </div>
+            <div className="flex flex-col">
+              <h3 className="font-bold text-2xl text-center mb-6">Try it</h3>
+              <div className="bg-white flex flex-col flex-grow border border-gray-300 rounded-3xl p-4 md:p-8">
+                <div className="h-48 flex-grow border border-gray-300 rounded-3xl mb-6 py-3 px-4 text-gray-500"></div>
+                <Search />
+              </div>
+              <p className="mt-2 text-gray-600 text-center italic">
+                Try for example &apos;Which shoes are great for hiking?&apos;
               </p>
-              {serverErrors &&
-                serverErrors.map((error, id) => (
-                  <span key={id} className="text-red-600">
-                    {error}
-                  </span>
-                ))}
-              <form onSubmit={handleSubmit}>
-                <div className={"flex flex-col mb-4"}>
-                  <label className="">Name</label>
-                  <input
-                    type="text"
-                    value={name}
-                    onChange={(e) => setName(e.target.value)}
-                    required
-                    className="h-10 rounded-md border border-solid border-gray-300 focus:border-2 focus:border-pink-600 focus:outline-none"
-                  />
-                </div>
-                <div
-                  className={
-                    (emailError ? "border-solid border-red-600 " : "") +
-                    "flex flex-col mb-4"
-                  }
-                >
-                  <label
-                    htmlFor="email"
-                    className={(emailError ? "text-red-600 " : "") + "mb-1"}
-                  >
-                    Your E-mail
-                  </label>
-                  <input
-                    type="email"
-                    id="email"
-                    name="email"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                    className={
-                      (emailError
-                        ? "border-solid border border-red-600 "
-                        : "border-solid border border-gray-300 ") +
-                      "h-10 rounded-md focus:border-2 focus:border-pink-600 focus:outline-none"
-                    }
-                    required
-                  />
-                  {emailError && (
-                    <span className="text-sm text-red-600">{emailError}</span>
-                  )}
-                </div>
-
-                <label
-                  htmlFor="terms"
-                  className="flex items-center space-x-3 mb-4"
-                >
-                  <input
-                    type="checkbox"
-                    id="terms"
-                    name="terms"
-                    className="h-5 w-5 flex-shrink-0"
-                    checked={consent}
-                    onChange={() => setConsent(!consent)}
-                  />
-                  <span
-                    className={
-                      (consentError ? "text-red-600 " : "") + "text-sm"
-                    }
-                  >
-                    I&apos;d like to be notified as soon as Turbotailer launches
-                  </span>
-                </label>
-                {consentError && (
-                  <span className="text-sm text-red-600">{consentError}</span>
-                )}
-
-                <button
-                  type="submit"
-                  className="bg-pink-600 hover:bg-pink-500 text-white px-6 py-2 rounded-xl font-bold text-xl mt-3 mb-5"
-                >
-                  Sign Up
-                </button>
-              </form>
             </div>
           </div>
         </div>

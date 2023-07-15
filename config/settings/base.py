@@ -337,11 +337,4 @@ SPECTACULAR_SETTINGS = {
 # Your stuff...
 # ------------------------------------------------------------------------------
 
-PINECONE_API_KEY = env("PINECONE_API_KEY")
-PINECONE_ENVIRONMENT = env("PINECONE_ENVIRONMENT")
-
-FERNET_KEY = env("FERNET_KEY")
-
-HUGGINGFACE = env("HUGGINGFACE")
-
 DATA_UPLOAD_MAX_NUMBER_FIELDS=9999

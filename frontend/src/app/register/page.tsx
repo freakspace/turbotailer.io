@@ -3,10 +3,15 @@
 import { useRouter } from "next/navigation";
 import { FormEvent, useState, useContext, useEffect } from "react";
 import Link from "next/link";
+import { motion, useAnimation } from "framer-motion";
 
 import { getAuth } from "../login/services";
 
 import { UserContext, IContext } from "@/context/UserContext";
+
+import Input from "../components/Input";
+import Button from "../components/Button";
+import { spinner } from "../components/utils";
 
 function isValidEmail(email: string): boolean {
   const re =
@@ -28,6 +33,8 @@ export default function Register() {
   const [termsError, setTermsError] = useState("");
 
   const [serverErrors, setServerErrors] = useState<string[]>([]);
+
+  const [isLoading, setIsLoading] = useState(false);
 
   const { token, setToken } = useContext(UserContext) as IContext;
   const { push } = useRouter();
@@ -62,12 +69,12 @@ export default function Register() {
     return isValid;
   };
 
-  const handleSubmit = async (e: FormEvent) => {
-    e.preventDefault();
+  const handleSubmit = async () => {
+    setIsLoading(true);
     const isValid = validateSubmission();
     if (isValid) {
       const response = await fetch(
-        `http://127.0.0.1:8000/api/users/register/`,
+        `${process.env.NEXT_PUBLIC_DJANGO_API_URL}/api/users/register/`,
         {
           method: "POST",
           headers: {
@@ -104,7 +111,7 @@ export default function Register() {
         }
       }
 
-      console.log(data);
+      setIsLoading(false);
     }
   };
 
@@ -119,161 +126,125 @@ export default function Register() {
       <div className="container mx-auto">
         <div className="flex justify-center items-center h-screen">
           <div className="w-1/2">
-            <div className="bg-gray-50 rounded-2xl border border-solid border-gray-300 p-10 shadow-xl">
-              <h2 className="text-5xl mb-3 text-pink-600 font-bold">
-                Turbocharge Your Store
-              </h2>
-              <p className="text-lg mb-5 font-bold">
-                Create an account to get started
-              </p>
+            <div className="relative bg-white rounded-2xl border border-solid border-gray-300 p-10 shadow-xl">
+              {isLoading && (
+                <div className="absolute inset-0 flex items-center justify-center bg-white bg-opacity-50 rounded-2xl">
+                  <motion.div
+                    className="w-6 h-6 border-t-2 border-pink-600 rounded-full mr-2"
+                    animate={spinner.animate}
+                    transition={spinner.transition}
+                  />
+                  <div className="text-lg font-bold">Hold your horses...</div>
+                </div>
+              )}
+              <h1 className="text-3xl font-bold mb-5 text-gray-800">
+                Register
+              </h1>
               {serverErrors &&
                 serverErrors.map((error, id) => (
                   <span key={id} className="text-red-600">
                     {error}
                   </span>
                 ))}
-              <form onSubmit={handleSubmit}>
-                <div className={"flex flex-col mb-4"}>
-                  <label className="">Username</label>
-                  <input
-                    type="text"
-                    value={username}
-                    onChange={(e) => setUsername(e.target.value)}
-                    required
-                    className="h-10 rounded-md border border-solid border-gray-300 focus:border-2 focus:border-pink-600 focus:outline-none"
-                  />
-                </div>
-                <div
-                  className={
-                    (emailError ? "border-solid border-red-600 " : "") +
-                    "flex flex-col mb-4"
-                  }
-                >
-                  <label
-                    htmlFor="email"
-                    className={(emailError ? "text-red-600 " : "") + "mb-1"}
-                  >
-                    Your E-mail
-                  </label>
-                  <input
-                    type="email"
-                    id="email"
-                    name="email"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                    className={
-                      (emailError
-                        ? "border-solid border border-red-600 "
-                        : "border-solid border border-gray-300 ") +
-                      "h-10 rounded-md focus:border-2 focus:border-pink-600 focus:outline-none"
-                    }
-                    required
-                  />
-                  {emailError && (
-                    <span className="text-sm text-red-600">{emailError}</span>
-                  )}
-                </div>
-                <div className="grid grid-cols-2 gap-8 mb-4">
-                  <div className="flex flex-col">
-                    <label
-                      htmlFor="password"
-                      className={
-                        (passwordError ? "text-red-600 " : "") + "mb-1"
-                      }
-                    >
-                      Create a Password
-                    </label>
-                    <input
-                      type="password"
-                      id="password"
-                      name="password"
-                      value={password}
-                      onChange={(e) => setPassword(e.target.value)}
-                      className="border-solid border border-gray-300 h-10 rounded-md focus:border-2 focus:border-pink-600 focus:outline-none"
-                      required
-                    />
-                  </div>
-                  <div className="flex flex-col">
-                    <label
-                      htmlFor="password"
-                      className={passwordError ? "text-red-600 " : "mb-1"}
-                    >
-                      Repeat Password
-                    </label>
-                    <input
-                      type="password"
-                      id="password-repeated"
-                      name="password-repeated"
-                      value={passwordRepeated}
-                      onChange={(e) => setPasswordRepeated(e.target.value)}
-                      className={
-                        (passwordError
-                          ? "border-solid border border-red-600 "
-                          : "border-solid border border-gray-300 ") +
-                        "h-10 rounded-md focus:border-2 focus:border-pink-600 focus:outline-none"
-                      }
-                      required
-                    />
-                  </div>
-                  {passwordError && (
-                    <span className="text-sm text-red-600">
-                      {passwordError}
-                    </span>
-                  )}
-                </div>
-                <label
-                  htmlFor="terms"
-                  className="flex items-center space-x-3 mb-4"
-                >
-                  <input
-                    type="checkbox"
-                    id="terms"
-                    name="terms"
-                    className="h-5 w-5 flex-shrink-0"
-                    checked={termsIsChecked}
-                    onChange={() => setTermsIsChecked(!termsIsChecked)}
-                  />
-                  <span
-                    className={(termsError ? "text-red-600 " : "") + "text-sm"}
-                  >
-                    By creating a Turbotailer account you agree to our Terms of
-                    Use and Privacy Policy
-                  </span>
-                </label>
-                {termsError && (
-                  <span className="text-sm text-red-600">{termsError}</span>
+              <div className={"flex flex-col mb-4"}>
+                <Input
+                  placeholder="Username"
+                  type="text"
+                  value={username}
+                  onChange={(e) => setUsername(e.target.value)}
+                  required
+                />
+              </div>
+              <div
+                className={
+                  (emailError ? "border-solid border-red-600 " : "") +
+                  "flex flex-col mb-4"
+                }
+              >
+                <Input
+                  placeholder="E-mail"
+                  type="email"
+                  id="email"
+                  name="email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  required
+                  error={emailError}
+                />
+                {emailError && (
+                  <span className="text-sm text-red-600">{emailError}</span>
                 )}
-                <label
-                  htmlFor="subscribe"
-                  className="flex items-center space-x-3 mb-4"
-                >
-                  <input
-                    type="checkbox"
-                    id="subscribe"
-                    name="subscribe"
-                    className="h-5 w-5 text-blue-600 flex-shrink-0"
-                    checked={newsletterIsChecked}
-                    onChange={() =>
-                      setNewsletterIsChecked(!newsletterIsChecked)
-                    }
+              </div>
+              <div className="grid grid-cols-2 gap-8 mb-4">
+                <div className="flex flex-col">
+                  <Input
+                    placeholder="Password"
+                    type="password"
+                    id="password"
+                    name="password"
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    required
                   />
-                  <span className="text-sm">
-                    Receive tips & tricks on a regularly basis
-                  </span>
-                </label>
-                <button
-                  type="submit"
-                  className="bg-pink-600 hover:bg-pink-500 text-white px-6 py-2 rounded-xl font-bold text-xl mt-3 mb-5"
+                </div>
+                <div className="flex flex-col">
+                  <Input
+                    placeholder="Repeat password"
+                    type="password"
+                    id="password-repeated"
+                    name="password-repeated"
+                    value={passwordRepeated}
+                    onChange={(e) => setPasswordRepeated(e.target.value)}
+                    required
+                    error={passwordError}
+                  />
+                </div>
+              </div>
+              <label
+                htmlFor="terms"
+                className="flex items-center space-x-3 mb-4"
+              >
+                <input
+                  type="checkbox"
+                  id="terms"
+                  name="terms"
+                  className="h-5 w-5 flex-shrink-0"
+                  checked={termsIsChecked}
+                  onChange={() => setTermsIsChecked(!termsIsChecked)}
+                />
+                <span
+                  className={(termsError ? "text-red-600 " : "") + "text-sm"}
                 >
-                  Register
-                </button>
-              </form>
+                  By creating a Turbotailer account you agree to our Terms of
+                  Use and Privacy Policy
+                </span>
+              </label>
+              <label
+                htmlFor="subscribe"
+                className="flex items-center space-x-3 mb-4"
+              >
+                <input
+                  type="checkbox"
+                  id="subscribe"
+                  name="subscribe"
+                  className="h-5 w-5 text-blue-600 flex-shrink-0"
+                  checked={newsletterIsChecked}
+                  onChange={() => setNewsletterIsChecked(!newsletterIsChecked)}
+                />
+                <span className="text-sm">
+                  Receive tips & tricks on a regularly basis
+                </span>
+              </label>
+              <Button onClick={() => handleSubmit()}>Register</Button>
               <p>
                 Already have an account?{" "}
                 <Link href={"login/"} className="text-pink-600 font-bold">
                   Log In
                 </Link>
               </p>
+            </div>
+            <div className="div text-center mt-5">
+              <p className="text-xl font-bold">Turbotailer</p>
             </div>
           </div>
         </div>

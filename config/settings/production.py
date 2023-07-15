@@ -180,3 +180,9 @@ PINECONE_ENVIRONMENT = env("PINECONE_ENVIRONMENT")
 HUGGINGFACE = env("HUGGINGFACE")
 
 AWS_DEFAULT_ACL = None
+
+CORS_ALLOWED_ORIGINS = [
+    "http://127.0.0.1:3000",
+    "https://turbotailer.io",
+    "https://turbotailer.vercel.app"
+]

@@ -89,7 +89,7 @@ export default function Home() {
                       (consentError ? "text-red-600 " : "") + "text-sm"
                     }
                   >
-                    I'd like to be notified as soon as Turbotailer launches
+                    I&apos;d like to be notified as soon as Turbotailer launches
                   </span>
                 </label>
                 {consentError && (

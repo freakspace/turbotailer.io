@@ -5,7 +5,7 @@ export const createWooCommerce = async (
     baseUrl: string
     ) => {
     const response = await fetch(
-        `http://127.0.0.1:8000/api/stores/create_woocommerce/`,
+        `${process.env.NEXT_PUBLIC_DJANGO_API_URL}/api/stores/create_woocommerce/`,
         {
           method: "POST",
           headers: {
@@ -31,7 +31,7 @@ export const updateWooCommerce = async (
     consumerSecret?: string | null,
     ) => {
     const response = await fetch(
-        `http://127.0.0.1:8000/api/stores/update_woocommerce/`,
+        `${process.env.NEXT_PUBLIC_DJANGO_API_URL}/api/stores/update_woocommerce/`,
         {
           method: "POST",
           headers: {
@@ -59,7 +59,7 @@ export const verifyConnection = async (
 
     
   const response = await fetch(
-    `http://127.0.0.1:8000/api/stores/ping_connection/`,
+    `${process.env.NEXT_PUBLIC_DJANGO_API_URL}/api/stores/ping_connection/`,
     {
       method: "POST",
       headers: {

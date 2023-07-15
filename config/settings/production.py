@@ -173,3 +173,5 @@ SPECTACULAR_SETTINGS["SERVERS"] = [  # noqa: F405
 ]
 # Your stuff...
 # ------------------------------------------------------------------------------
+
+FERNET_KEY = env("FERNET_KEY")

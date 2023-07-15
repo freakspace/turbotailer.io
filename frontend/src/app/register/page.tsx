@@ -125,8 +125,8 @@ export default function Register() {
     <div className="w-screen">
       <div className="container mx-auto">
         <div className="flex justify-center items-center h-screen">
-          <div className="w-1/2">
-            <div className="relative bg-white rounded-2xl border border-solid border-gray-300 p-10 shadow-xl">
+          <div className="md:w-1/2 mx-4">
+            <div className="relative bg-white rounded-2xl border border-solid border-gray-300 md:p-10 p-6 shadow-xl">
               {isLoading && (
                 <div className="absolute inset-0 flex items-center justify-center bg-white bg-opacity-50 rounded-2xl">
                   <motion.div
@@ -202,7 +202,7 @@ export default function Register() {
               </div>
               <label
                 htmlFor="terms"
-                className="flex items-center space-x-3 mb-4"
+                className="flex items-center space-x-3 mb-5"
               >
                 <input
                   type="checkbox"
@@ -221,7 +221,7 @@ export default function Register() {
               </label>
               <label
                 htmlFor="subscribe"
-                className="flex items-center space-x-3 mb-4"
+                className="flex items-center space-x-3 mb-5"
               >
                 <input
                   type="checkbox"
@@ -236,7 +236,7 @@ export default function Register() {
                 </span>
               </label>
               <Button onClick={() => handleSubmit()}>Register</Button>
-              <p>
+              <p className="mt-5">
                 Already have an account?{" "}
                 <Link href={"login/"} className="text-pink-600 font-bold">
                   Log In

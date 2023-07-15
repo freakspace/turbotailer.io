@@ -97,7 +97,7 @@ function SelectStore({
   const Card = ({ id }: { id: string }) => {
     return (
       <button
-        className={`px-6 py-6 rounded-xl p-8 text-2xl ${
+        className={`px-6 py-6 rounded-xl p-8 text-lg md:text-2xl ${
           id === storeType
             ? "border border-solid border-pink-600"
             : "border border-solid border-gray-200"
@@ -123,7 +123,7 @@ function SelectStore({
   return (
     <StepWrapper>
       <h3 className="text-2xl font-bold mb-5">Information</h3>
-      <div className="grid grid-cols-2 gap-4 mb-5">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-5">
         <div
           className={
             (storeNameError ? "border-solid border-red-600 " : "") +
@@ -173,7 +173,7 @@ function SelectStore({
         </div>
       </div>
       <h3 className="text-2xl font-bold mb-5">Your store CMS</h3>
-      <div className="grid grid-cols-2 gap-4 mb-10">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-10">
         {storeTypes.map((store, key) => (
           <Card key={key} id={store} />
         ))}

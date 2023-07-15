@@ -16,27 +16,27 @@ let steps: IStep[] = [
   {
     is_finished: false,
     number: 1,
-    description: "Select Store Type",
+    description: "Store",
   },
   {
     is_finished: false,
     number: 2,
-    description: "Select Channels",
+    description: "Channels",
   },
   {
     is_finished: false,
     number: 3,
-    description: "Integrate your store",
+    description: "Integration",
   },
   {
     is_finished: false,
     number: 4,
-    description: "Verifying Connection",
+    description: "Connection",
   },
   {
     is_finished: false,
     number: 5,
-    description: "Start Embedding",
+    description: "Embedding",
   },
 ];
 
@@ -211,7 +211,7 @@ export default function Onboarding() {
   }, [push, token]);
 
   return (
-    <div className="w-1/3 mx-auto mt-10">
+    <div className="md:w-1/3 mx-auto mt-10 p-5">
       <div className="">
         <div className="mb-5 flex gap-4">
           {isLoading ? (

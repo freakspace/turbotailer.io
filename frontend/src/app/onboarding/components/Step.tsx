@@ -32,36 +32,49 @@ export default function Step({
   return (
     <motion.div
       onClick={() => setCurrentStep((prev) => prev + 1)}
-      className={`flex items-center justify-between border border-2 px-4 py-2 rounded-xl flex-none bg-white ${
-        step.number === currentStep
-          ? "border border-2 border-solid border-pink-600 text-pink-600"
-          : ``
-      }`}
       variants={itemVariants} // set the variants
       initial="normal" // set the initial state
       animate={step.number === currentStep ? "active" : "normal"} // animate depending on the state
     >
       {step.is_finished ? (
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          fill="none"
-          viewBox="0 0 24 24"
-          strokeWidth={1.5}
-          stroke="currentColor"
-          className="w-6 h-6 text-green-600"
-        >
-          <path
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
-          />
-        </svg>
+        <div className="text-sm md:text-lg text-green-600 w-6 h-6 md:w-12 md:h-12 flex items-center justify-center border border-2 border-green-600 rounded-full bg-white">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 24 24"
+            strokeWidth={2}
+            stroke="currentColor"
+            className="w-4 h-4 md:w-6 md:h-6"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              d="M4.5 12.75l6 6 9-13.5"
+            />
+          </svg>
+        </div>
       ) : step.number === currentStep ? (
-        <span className="w-full ml-4 font-bold text-center text-lg">
-          {step.description}
-        </span>
+        <div
+          className={`flex items-center justify-between border border-2 px-2 md:px-4 md:py-2 rounded-full flex-none bg-white ${
+            step.number === currentStep
+              ? "border border-2 border-solid border-pink-600 text-pink-600"
+              : ``
+          }`}
+        >
+          <span className="w-full font-bold text-center text-sm md:text-lg">
+            {step.description}
+          </span>
+        </div>
       ) : (
-        <span className="text-lg text-center  ">{step.number}</span>
+        <div
+          className={`w-6 h-6 md:w-12 md:h-12 flex items-center justify-between border border-2 px-2 md:px-4 md:py-2 rounded-full bg-white ${
+            step.number === currentStep
+              ? "border border-2 border-solid border-pink-600 text-pink-600"
+              : ``
+          }`}
+        >
+          <span className="text-sm md:text-lg"></span>
+        </div>
       )}
     </motion.div>
   );

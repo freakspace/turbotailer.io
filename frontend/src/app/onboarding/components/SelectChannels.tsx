@@ -82,7 +82,7 @@ export default function SelectChannels({
   const Card = ({ id }: { id: string }) => {
     return (
       <button
-        className={`px-6 py-6 rounded-xl p-8 text-2xl capitalize border border-2 border-solid ${
+        className={`px-6 py-6 rounded-xl p-8 text-lg md:text-2xl capitalize border border-2 border-solid ${
           channels && channels.includes(id)
             ? "border-pink-600"
             : "border-gray-200"
@@ -103,7 +103,7 @@ export default function SelectChannels({
         These channels will be included and available from the chat. You can
         change these settings in your dashboard.
       </p>
-      <div className="grid grid-cols-2 gap-4 mb-10">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-10">
         {availableChannels.map((channel, key) => (
           <Card key={key} id={channel} />
         ))}

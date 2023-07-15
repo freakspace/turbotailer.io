@@ -153,7 +153,7 @@ export default function IntegrateWooCommerce({
             1. Add this script just before your closing{" "}
             <strong>&lt;/head&gt;</strong> tag
           </p>
-          <pre className="bg-gray-500 p-8 text-white rounded-xl border border-solid border-black mb-5">
+          <pre className="bg-gray-500 p-8 text-white rounded-xl border border-solid border-black mb-5 overflow-x-auto">
             <code>
               {
                 "<script src=&apos;https://turbotailer.io/static/js/turbotailer.js&apos;></script>"
@@ -166,7 +166,7 @@ export default function IntegrateWooCommerce({
             2. Add this script just before your closing{" "}
             <strong>&lt;/body&gt;</strong> tag
           </p>
-          <pre className="bg-gray-500 p-8 text-white rounded-xl border border-solid border-black mb-5">
+          <pre className="bg-gray-500 p-8 text-white rounded-xl border border-solid border-black mb-5 overflow-x-auto">
             <code>
               {`<script>\n    window.addEventListener(&apos;DOMContentLoaded&apos;, () => {\n        initializeChatbot(&apos;${storeId}&apos;);\n    });\n</script>`}
             </code>

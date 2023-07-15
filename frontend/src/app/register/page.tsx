@@ -34,6 +34,8 @@ export default function Register() {
 
   const [serverErrors, setServerErrors] = useState<string[]>([]);
 
+  const [logs, setLogs] = useState("");
+
   const [isLoading, setIsLoading] = useState(false);
 
   const { token, setToken } = useContext(UserContext) as IContext;
@@ -87,9 +89,9 @@ export default function Register() {
           }),
         }
       );
-
+      console.log(response);
       const data = await response.json();
-
+      setLogs(data);
       if (!response.ok) {
         let errors: string[] = [];
         for (let field in data) {
@@ -123,6 +125,8 @@ export default function Register() {
 
   return (
     <div className="w-screen">
+      <p className="text-black">{process.env.NEXT_PUBLIC_DJANGO_API_URL}</p>
+      <pre className="text-black">{logs && JSON.stringify(logs)}</pre>
       <div className="container mx-auto">
         <div className="flex justify-center items-center h-screen">
           <div className="md:w-1/2 mx-4">

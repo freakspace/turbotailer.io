@@ -181,8 +181,11 @@ HUGGINGFACE = env("HUGGINGFACE")
 
 # AWS_DEFAULT_ACL = None
 
-CORS_ALLOWED_ORIGINS = [
+""" CORS_ALLOWED_ORIGINS = [
     "http://127.0.0.1:3000",
     "https://turbotailer.io",
-    "https://turbotailer.vercel.app"
-]
+    "https://turbotailer.vercel.app",
+    "https://turbotailer-freakspace.vercel.app"
+] """
+
+CORS_ALLOW_ALL_ORIGINS = True

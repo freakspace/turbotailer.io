@@ -129,7 +129,7 @@ export default function Onboarding() {
   useEffect(() => {
     const getUserStores = async () => {
       const response = await fetch(
-        `http://127.0.0.1:8000/api/stores/get_user_stores/`,
+        `${process.env.NEXT_PUBLIC_DJANGO_API_URL}/api/stores/get_user_stores/`,
         {
           method: "GET",
           headers: {

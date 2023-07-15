@@ -53,7 +53,7 @@ export default function Dashboard() {
     if (!token) {
       push("login/");
     }
-  }, [token]);
+  }, [push, token]);
 
   return (
     <div className="container mx-auto mt-10">
@@ -63,16 +63,16 @@ export default function Dashboard() {
           <div className="">
             <h2 className="text-4xl font-bold mb-3">Information</h2>
             <div className="grid grid-cols-2 gap-8 bg-gray-50 border border-solid border-gray-50 p-8 rounded-2xl shadow-lg">
-              {settings.map((card) => (
-                <Card card={card} />
+              {settings.map((card, key) => (
+                <Card key={key} card={card} />
               ))}
             </div>
           </div>
           <div className="">
             <h2 className="text-4xl font-bold mb-3">Channels</h2>
             <div className="grid grid-rows-1 gap-8 bg-gray-50 border border-solid border-gray-50 p-8 rounded-2xl shadow-lg">
-              {channels.map((card) => (
-                <Card card={card} />
+              {channels.map((card, key) => (
+                <Card key={key} card={card} />
               ))}
             </div>
           </div>

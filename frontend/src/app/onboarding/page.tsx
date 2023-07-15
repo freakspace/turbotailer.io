@@ -201,14 +201,14 @@ export default function Onboarding() {
     };
 
     getUserStores();
-  }, [currentStep]);
+  }, [consumerKey, consumerSecret, hasConnection, token, currentStep]);
 
   // Check if user is logged in
   useEffect(() => {
     if (!token) {
       push("login/");
     }
-  }, [token]);
+  }, [push, token]);
 
   return (
     <div className="w-1/3 mx-auto mt-10">

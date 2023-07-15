@@ -42,7 +42,10 @@ class PromptsViewSet(viewsets.ViewSet):
     # TODO Check if ID matches 
     @action(detail=False, methods=['get'])
     def test(self, request):
-        return Response({"message": "Prompter"})
+        print("test")
+        response = Response({"message": "Prompter"})
+        response["Access-Control-Allow-Origin"] = "*"
+        return response
 
 
         

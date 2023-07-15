@@ -87,8 +87,8 @@ export default function IntegrateWooCommerce({
             Add your WooCommerce API keys
           </h3>
           <p className="text-lg mb-3">
-            We'll need read access to your API, which we will parse with our
-            robot and prepare your Turbotailer
+            We&apos;ll need read access to your API, which we will parse with
+            our robot and prepare your Turbotailer
           </p>
           <div
             className={
@@ -156,7 +156,7 @@ export default function IntegrateWooCommerce({
           <pre className="bg-gray-500 p-8 text-white rounded-xl border border-solid border-black mb-5">
             <code>
               {
-                "<script src='https://turbotailer.io/static/js/turbotailer.js'></script>"
+                "<script src=&apos;https://turbotailer.io/static/js/turbotailer.js&apos;></script>"
               }
             </code>
           </pre>
@@ -168,7 +168,7 @@ export default function IntegrateWooCommerce({
           </p>
           <pre className="bg-gray-500 p-8 text-white rounded-xl border border-solid border-black mb-5">
             <code>
-              {`<script>\n    window.addEventListener('DOMContentLoaded', () => {\n        initializeChatbot('${storeId}');\n    });\n</script>`}
+              {`<script>\n    window.addEventListener(&apos;DOMContentLoaded&apos;, () => {\n        initializeChatbot(&apos;${storeId}&apos;);\n    });\n</script>`}
             </code>
           </pre>
         </div>

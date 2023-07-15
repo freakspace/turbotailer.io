@@ -45,7 +45,7 @@ export default function VerifyConnection({
         setCurrentStep((prev) => prev + 1);
       }, 2000);
     } else {
-      setConnectionError("We can't establish a connection");
+      setConnectionError("We can&apos;t establish a connection");
     }
   };
 
@@ -67,7 +67,7 @@ export default function VerifyConnection({
       <div className="">
         <h3 className="text-xl font-bold mb-5">Verifying Connection</h3>
         <p className="text-lg mb-5">
-          We'll ping your API to check if there is a connection
+          We&apos;ll ping your API to check if there is a connection
         </p>
 
         <div className="">

@@ -112,7 +112,7 @@ export default function Register() {
     if (token) {
       push("onboarding/");
     }
-  }, [token]);
+  }, [push, token]);
 
   return (
     <div className="w-screen">

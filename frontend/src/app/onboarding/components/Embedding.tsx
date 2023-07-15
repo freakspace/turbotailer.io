@@ -80,8 +80,8 @@ export default function Embedding({
         {isEstimating && <p>Estimating</p>}
         <p className="text-lg mb-3">
           To get an understanding of how much embedding will cost, you can use
-          our calculater below. We'll crawl all of your content, so it might
-          take a few minutes.
+          our calculater below. We&apos;ll crawl all of your content, so it
+          might take a few minutes.
         </p>
         <div className="grid grid-cols-3 gap-4 mb-10">
           <div className="flex items-end justify-end">

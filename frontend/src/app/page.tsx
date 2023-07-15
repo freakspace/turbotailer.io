@@ -13,13 +13,13 @@ export default function Home() {
 
   const handleSubmit = () => {};
   return (
-    <div className="w-screen">
+    <div className="">
       <div className="container mx-auto">
         <div className="flex justify-center items-center h-screen">
           <div className="w-1/2">
             <div className="bg-gray-50 rounded-2xl border border-solid border-gray-300 p-10 shadow-xl">
               <h2 className="text-5xl mb-3 text-pink-600 font-bold">
-                Turbocharge Your Store
+                Get $20 worth of OpenAI credits
               </h2>
               <p className="text-lg mb-5 font-bold">
                 Create an account to get started

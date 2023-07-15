@@ -175,3 +175,4 @@ SPECTACULAR_SETTINGS["SERVERS"] = [  # noqa: F405
 # ------------------------------------------------------------------------------
 
 FERNET_KEY = env("FERNET_KEY")
+PINECONE_API_KEY = env("PINECONE_API_KEY")

@@ -30,7 +30,7 @@ export const UserProvider = (props: any) => {
       };
 
       const response = await fetch(
-        "http://127.0.0.1:8000/api/users/me",
+        `${process.env.NEXT_PUBLIC_DJANGO_API_URL}/api/users/me`,
         requestOptions
       );
 

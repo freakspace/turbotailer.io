@@ -1,3 +1,4 @@
+from django.db import models
 from django.contrib.auth.models import AbstractUser
 from django.db.models import CharField
 from django.urls import reverse
@@ -24,3 +25,8 @@ class User(AbstractUser):
 
         """
         return reverse("users:detail", kwargs={"username": self.username})
+
+class Subscriber(models.Model):
+    name = CharField(_("Name of Subscriber"), blank=True, max_length=255)
+    email = CharField(_("Email of Subscriber"), blank=True, max_length=255)
+    created = models.DateTimeField(_("Date of subscription"), auto_now_add=True)

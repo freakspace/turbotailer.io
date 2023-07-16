@@ -11,7 +11,7 @@ const Input = React.forwardRef<HTMLInputElement, CustomInputProps>(
       <div className="">
         <input
           className={
-            "w-full text-sm md:text-lg py-3 px-2 rounded-md border border-2 border-solid focus:border-2 focus:border-pink-600 focus:outline-none " +
+            "w-full text-sm md:text-lg py-3 px-4 rounded-full border border-solid focus:shadow-lg focus:outline-none " +
             errorStyle
           }
           ref={ref}

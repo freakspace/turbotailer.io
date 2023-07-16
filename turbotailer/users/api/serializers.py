@@ -20,3 +20,8 @@ class UserSerializer(serializers.ModelSerializer):
         user.set_password(password)
         user.save()
         return user
+
+
+class SubscriberSerializer(serializers.Serializer):
+    name = serializers.CharField(max_length=255)
+    email = serializers.CharField(max_length=255)

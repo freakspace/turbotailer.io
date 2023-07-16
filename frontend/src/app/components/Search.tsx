@@ -33,7 +33,7 @@ export default function Search() {
     <div
       className={
         "flex items-center border border-gray-300 rounded-full py-2 px-4 " +
-        (isActive ? "shadow-xl" : "shadow-lg shadow-gray-200")
+        (isActive ? "shadow-xl" : "")
       }
     >
       <input
@@ -50,7 +50,7 @@ export default function Search() {
         viewBox="0 0 24 24"
         strokeWidth={1.5}
         stroke="currentColor"
-        className="w-6 h-6"
+        className="w-6 h-6 text-blue-800"
         onClick={() => submitChat()}
       >
         <path

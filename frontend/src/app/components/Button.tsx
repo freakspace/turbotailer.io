@@ -12,7 +12,7 @@ export default function Button({
     <button
       {...props}
       style={{ cursor: "pointer" }}
-      className={`bg-pink-600 hover:bg-pink-500 text-white px-6 py-3 rounded-lg font-bold text-xl shadow-lg border border-solid border-gray-300 ${
+      className={`px-6 py-2 bg-blue-800 text-white rounded-full text-lg font-bold border border-2 border-gray-200 ${
         fullWidth ? "w-full" : ""
       } ${className}`}
     >

@@ -1,3 +1,4 @@
+import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 
 import StepWrapper from "./StepWrapper";
@@ -6,14 +7,16 @@ import Button from "@/app/components/Button";
 export default function Embedding({
   token,
   storeId,
+  channels,
 }: {
   token: string | null;
   storeId: string | undefined;
+  channels: string[];
 }) {
   const [estimatedTokens, setEstimatedTokens] = useState<number>(0);
   const [estimatedPrice, setEstimatedPrice] = useState<number>(0);
   const [isEstimating, setIsEstimating] = useState(false);
-
+  const { push } = useRouter();
   const calculateTokens = async () => {
     setIsEstimating(true);
     const response = await fetch(
@@ -48,6 +51,28 @@ export default function Embedding({
     } finally {
       reader.releaseLock();
       setIsEstimating(false);
+    }
+  };
+
+  const startEmbedding = async () => {
+    const response = await fetch(
+      `${process.env.NEXT_PUBLIC_DJANGO_API_URL}/api/embeddings/create_task/`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: "Token " + token,
+        },
+        body: JSON.stringify({
+          store_id: storeId,
+          channels: channels,
+        }),
+      }
+    );
+    const data = await response.json();
+
+    if (response.ok) {
+      push("dashboard/");
     }
   };
 
@@ -117,7 +142,7 @@ export default function Embedding({
             updated daily, and only updated content will be embedded.
           </p>
           <div className="">
-            <Button>Start Embedding</Button>
+            <Button onClick={() => startEmbedding()}>Start Embedding</Button>
           </div>
         </div>
       </div>

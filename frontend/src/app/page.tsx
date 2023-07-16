@@ -4,16 +4,12 @@ import { useState, useRef, useEffect } from "react";
 import { motion, useAnimation } from "framer-motion";
 
 import Input from "./components/Input";
+import Button from "./components/Button";
 
 import Search from "./components/Search";
 export default function Home() {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
-  const [nameError, setNameError] = useState("");
-  const [emailError, setEmailError] = useState("");
-  const [consent, setConsent] = useState(false);
-  const [consentError, setConsentError] = useState("");
-  const [serverErrors, setServerErrors] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [isSubscribed, setIsSubscribed] = useState(false);
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -56,11 +52,8 @@ export default function Home() {
 
   return (
     <div className="container mx-auto">
-      <div className="flex flex-col md:flex-row justify-center items-center md:h-screen p-6">
+      <div className="flex flex-col md:flex-row justify-center items-center md:h-screen md:p-10 p-6">
         <div className="md:w-1/2 ">
-          <span className="text-sm inline-block border border-gray-500 px-3 py-2 rounded-full mb-4 text-gray-700">
-            Subscribe and receive $20 worth of OpenAI credits
-          </span>
           <h1 className="text-gray-800 text-4xl md:text-7xl mb-3 md:mb-6">
             <span className="font-bold">Turbocharging</span> ecommerce with{" "}
             <span className="font-bold">AI</span>
@@ -106,12 +99,7 @@ export default function Home() {
                 type="email"
                 onChange={(e) => setEmail(e.target.value)}
               />
-              <button
-                type="submit"
-                className="px-6 py-2 bg-blue-800 text-white rounded-full text-lg font-bold border border-2 border-gray-200"
-              >
-                Subscribe
-              </button>
+              <Button type="submit">Subscribe</Button>
             </form>
           </div>
         </div>

@@ -54,27 +54,13 @@ export default function Step({
           </svg>
         </div>
       ) : step.number === currentStep ? (
-        <div
-          className={`flex items-center justify-between border border-2 px-2 md:px-4 md:py-2 rounded-full flex-none bg-white ${
-            step.number === currentStep
-              ? "border border-2 border-solid border-pink-600 text-pink-600"
-              : ``
-          }`}
-        >
+        <div className="flex items-center justify-between border border-2 border-solid border-blue-800 text-blue-800 px-2 md:px-4 md:py-2 rounded-full flex-none bg-white">
           <span className="w-full font-bold text-center text-sm md:text-lg">
             {step.description}
           </span>
         </div>
       ) : (
-        <div
-          className={`w-6 h-6 md:w-12 md:h-12 flex items-center justify-between border border-2 px-2 md:px-4 md:py-2 rounded-full bg-white ${
-            step.number === currentStep
-              ? "border border-2 border-solid border-pink-600 text-pink-600"
-              : ``
-          }`}
-        >
-          <span className="text-sm md:text-lg"></span>
-        </div>
+        <div className="w-6 h-6 md:w-12 md:h-12 flex items-center justify-between border border-2 px-2 md:px-4 md:py-2 rounded-full bg-white"></div>
       )}
     </motion.div>
   );

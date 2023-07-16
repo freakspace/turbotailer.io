@@ -1,4 +1,4 @@
-import uuid
+import logging
 
 from rest_framework import status
 from rest_framework.decorators import action
@@ -9,12 +9,17 @@ from rest_framework import viewsets
 from django.http import StreamingHttpResponse
 
 from ..models import EmbeddingTask, Channel
+from turbotailer.stores.models import Store
 
 from ..vectorstore import Vectorstore
 
-from ..api.serializers import NamespaceSerializer
+from ..api.serializers import NamespaceSerializer, CreateEmbeddingTaskSerializer
 
 from ...utils.utils import is_valid_uuid
+
+
+logger = logging.getLogger(__name__)
+
 
 class EmbeddingsViewSet(viewsets.ViewSet):
     authentication_classes = [TokenAuthentication, SessionAuthentication, BasicAuthentication]
@@ -82,33 +87,53 @@ class EmbeddingsViewSet(viewsets.ViewSet):
 
         return Response({"error": "You are not authenticated!"}, status=status.HTTP_401_UNAUTHORIZED)
     
+    @action(detail=False, methods=['post'])
+    def create_task(self, request):
 
-    def create(self, request):
+        serializer = CreateEmbeddingTaskSerializer(data=request.data)
+
+        if not serializer.is_valid():
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
         if request.user.is_authenticated:
 
-            channel_id = request.data.get('channel_id')
+            store_id = request.data.get('store_id')
+            channels = request.data.get('channels') 
 
-            if not is_valid_uuid(channel_id):
-                return Response({"error": "You need to pass a uuid as id"}, status=status.HTTP_400_BAD_REQUEST)
+            try:
+                store = Store.objects.get(user=request.user, pk=store_id)
+            except Store.DoesNotExist:
+                return Response({"error": "Store doesn't exists"}, status=status.HTTP_400_BAD_REQUEST)
 
-            if channel_id is not None:
-                channel = Channel.objects.get(id=channel_id)
+            # e.g. ['products', 'categories']
+            for channel in channels:
+
+                count = 0
+                
+                try:
+                    channel = Channel.objects.get(channel=channel, store=store)
+                except Channel.DoesNotExist:
+                    logger.error(f"Unable to find channel '{channel}' for store {store}")
 
                 if channel.store.user != request.user:
                     return Response({"error": "You are not the owner of that channel!"}, status=status.HTTP_400_BAD_REQUEST)
 
+                existing_task = EmbeddingTask.objects.filter(channel=channel, status__in=["In progress", "Pending"])
+                
+                # Skip existing tasks
+                if existing_task:
+                    continue
+                
                 try:
                     EmbeddingTask.objects.create(
                         user = request.user,
                         channel = channel
                     )
-                    return Response({"message": "Embedding task created"})
+                    count += 1
                 except Exception as e:
-                    return Response({
-                        "error": str(e)
-                    }, status=status.HTTP_400_BAD_REQUEST)
-
-            return Response({"error": "No channel found"})
+                    logger.error(f'Unable to create embedding task with the following error: {e}')
+                
+            return Response({"message": f"{count} / {len(channels)} tasks created."})
         else:
             return Response({"error": "You are not authenticated!"}, status=status.HTTP_401_UNAUTHORIZED)
     

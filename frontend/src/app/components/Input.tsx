@@ -8,7 +8,7 @@ const Input = React.forwardRef<HTMLInputElement, CustomInputProps>(
   ({ error, ...props }, ref) => {
     const errorStyle = error ? "border-red-600" : "border-gray-200";
     return (
-      <div className="">
+      <div className="mb-3">
         <input
           className={
             "w-full text-sm md:text-lg py-3 px-4 rounded-full border border-solid focus:shadow-lg focus:outline-none " +

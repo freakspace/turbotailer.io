@@ -40,7 +40,9 @@ export const UserProvider = (props: any) => {
 
       localStorage.setItem("turbotailertoken", token);
     };
-    fetchUser();
+    if (token) {
+      fetchUser();
+    }
   }, [token]);
 
   return (

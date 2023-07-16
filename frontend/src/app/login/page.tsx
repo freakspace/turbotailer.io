@@ -39,9 +39,17 @@ export default function Login() {
     <div className="w-screen">
       <div className="container mx-auto">
         <div className="flex justify-center items-center h-screen">
-          <div className="grid grid-cols-1">
-            <div className="bg-white border border-1 border-solid border-gray-200 rounded-xl p-5 shadow-xl">
-              <h1 className="text-3xl font-bold mb-5 text-gray-800">Login</h1>
+          <div className="mx-4 md:w-1/2 grid grid-cols-1">
+            <div className="bg-white border border-1 border-solid border-gray-200 rounded-xl md:p-10 p-6 shadow-xl">
+              <h1 className="text-4xl md:text-7xl font-bold mb-8 text-gray-800">
+                Login
+              </h1>
+              <p className="text-gray-800 mb-5">
+                Don&apos;t remember your password?{" "}
+                <Link href={"register/"} className="text-blue-800 font-bold">
+                  Reset your password
+                </Link>
+              </p>
               <div className="flex flex-col mb-5">
                 <Input
                   type="text"
@@ -63,7 +71,7 @@ export default function Login() {
               </div>
               <p className="text-gray-800 mt-5">
                 Don&apos;t have an account?{" "}
-                <Link href={"register/"} className="text-pink-600 font-bold">
+                <Link href={"register/"} className="text-blue-800 font-bold">
                   Create an account
                 </Link>
               </p>

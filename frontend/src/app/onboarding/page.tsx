@@ -122,7 +122,7 @@ export default function Onboarding() {
         isConnecting={isConnecting}
       />
     ),
-    5: <Embedding token={token} storeId={storeId} />,
+    5: <Embedding token={token} storeId={storeId} channels={channels} />,
   };
 
   // Fetch Store and Prepare steps
@@ -176,21 +176,6 @@ export default function Onboarding() {
         if (hasConnection) {
           steps[3].is_finished = true;
           step++;
-        } else {
-          // Ping connection in case of page refresh by user
-          if (token && consumerKey && consumerSecret) {
-            setIsConnecting(true);
-            const response = await verifyConnection(token, store.id);
-
-            if (response.ok) {
-              steps[3].is_finished = true;
-              step++;
-            } else {
-              setConnectionError(
-                "There was an error connecting. Please verify that you added the correct API keys."
-              );
-            }
-          }
         }
 
         setCurrentStep(step);

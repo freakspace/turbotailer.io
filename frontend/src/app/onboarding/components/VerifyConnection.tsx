@@ -90,9 +90,9 @@ export default function VerifyConnection({
               Connected
             </button>
           ) : isConnecting ? (
-            <button className="inline-flex items-center px-6 py-2 rounded-xl font-bold text-xl border border-2 border-solid border-pink-600">
+            <button className="inline-flex items-center px-6 py-2 rounded-xl font-bold text-xl border border-2 border-solid border-blue-800">
               <motion.div
-                className="w-6 h-6 border-t-2 border-pink-600 rounded-full mr-2"
+                className="w-6 h-6 border-t-2 border-blue-800 rounded-full mr-2"
                 animate={spinner.animate}
                 transition={spinner.transition}
               />
@@ -101,7 +101,7 @@ export default function VerifyConnection({
           ) : (
             <button
               onClick={() => handleVerification()}
-              className="bg-pink-600 hover:bg-pink-500 text-white px-6 py-2 rounded-xl font-bold text-xl"
+              className="bg-blue-800 hover:bg-blue-500 text-white px-6 py-2 rounded-xl font-bold text-xl"
             >
               Verify
             </button>

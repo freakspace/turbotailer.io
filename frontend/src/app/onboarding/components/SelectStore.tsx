@@ -3,6 +3,7 @@ import { useState, useEffect } from "react";
 import { motion, useAnimation } from "framer-motion";
 
 import Button from "@/app/components/Button";
+import Input from "@/app/components/Input";
 
 const storeTypes = ["WooCommerce", "Magento", "Prestashop", "Shopify"];
 
@@ -95,8 +96,8 @@ function SelectStore({
       <button
         className={`px-6 py-6 rounded-xl p-8 text-lg md:text-2xl ${
           id === storeType
-            ? "border border-solid border-pink-600"
-            : "border border-solid border-gray-200"
+            ? "border border-2 border-solid border-blue-800"
+            : "border border-2 border-solid border-gray-200"
         }`}
         id={id}
         onClick={(e) => setStoreType((e.target as HTMLElement).id)}
@@ -126,22 +127,14 @@ function SelectStore({
             "flex flex-col mb-4"
           }
         >
-          <label className="text-lg">Your store name</label>
-          <input
+          <Input
+            error={storeNameError}
+            placeholder="Your store name"
             type="text"
             value={storeName}
             onChange={(e) => setStoreName(e.target.value)}
             required
-            className={
-              (storeNameError
-                ? "border-solid border border-red-600 "
-                : "border-solid border border-gray-300 ") +
-              "px-3 py-2 rounded-md focus:border-2 focus:border-pink-600 focus:outline-none"
-            }
           />
-          {storeNameError && (
-            <span className="text-sm text-red-600">{storeNameError}</span>
-          )}
         </div>
         <div
           className={
@@ -149,23 +142,13 @@ function SelectStore({
             "flex flex-col mb-4"
           }
         >
-          <label className="text-lg">Your store URL</label>
-          <input
-            type="text"
+          <Input
+            error={baseUrlError}
+            placeholder="Your store URL"
             value={baseUrl}
             onChange={(e) => setBaseUrl(e.target.value)}
             required
-            className={
-              (baseUrlError
-                ? "border-solid border border-red-600 "
-                : "border-solid border border-gray-300 ") +
-              "px-3 py-2 rounded-md focus:border-2 focus:border-pink-600 focus:outline-none"
-            }
           />
-          <span className="text-sm">For example mydomain.com</span>
-          {baseUrlError && (
-            <span className="text-sm text-red-600">{baseUrlError}</span>
-          )}
         </div>
       </div>
       <h3 className="text-2xl font-bold mb-5">Your store CMS</h3>

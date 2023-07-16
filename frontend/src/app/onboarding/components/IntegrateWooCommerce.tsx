@@ -1,6 +1,7 @@
 import { useState } from "react";
 
 import Button from "@/app/components/Button";
+import Input from "@/app/components/Input";
 
 import Link from "next/link";
 
@@ -90,60 +91,28 @@ export default function IntegrateWooCommerce({
             We&apos;ll need read access to your API, which we will parse with
             our robot and prepare your Turbotailer
           </p>
-          <div
-            className={
-              (consumerKeyError ? "border-solid border-red-600 " : "") +
-              "flex flex-col mb-4"
-            }
-          >
-            <label className="text-lg">Consumer Key</label>
-            <input
-              type="password"
-              value={consumerKey}
-              onChange={(e) => setConsumerKey(e.target.value)}
-              required
-              className={
-                (consumerKeyError
-                  ? "border-solid border border-red-600 "
-                  : "border-solid border border-gray-300 ") +
-                "h-10 rounded-md focus:border-2 focus:border-pink-600 focus:outline-none"
-              }
-            />
-            {consumerKeyError && (
-              <span className="text-sm text-red-600">{consumerKeyError}</span>
-            )}
-          </div>
-          <div
-            className={
-              (consumerSecretError ? "border-solid border-red-600 " : "") +
-              "flex flex-col"
-            }
-          >
-            <label className="text-lg">Consumer Secret</label>
-            <input
-              type="password"
-              value={consumerSecret}
-              onChange={(e) => setConsumerSecret(e.target.value)}
-              required
-              className={
-                (consumerSecretError
-                  ? "border-solid border border-red-600 "
-                  : "border-solid border border-gray-300 ") +
-                "h-10 rounded-md focus:border-2 focus:border-pink-600 focus:outline-none"
-              }
-            />
-            <span className="text-sm mt-2">
-              Unsure where to find your API keys?{" "}
-              <Link href="#" className="text-pink-600 font-bold">
-                Follow this guide
-              </Link>
-            </span>
-            {consumerSecretError && (
-              <span className="text-sm text-red-600">
-                {consumerSecretError}
-              </span>
-            )}
-          </div>
+          <Input
+            error={consumerKeyError}
+            placeholder="Consumer Key"
+            type="password"
+            value={consumerKey}
+            onChange={(e) => setConsumerKey(e.target.value)}
+            required
+          />
+          <Input
+            error={consumerSecretError}
+            placeholder="Consumer Secret"
+            type="password"
+            value={consumerSecret}
+            onChange={(e) => setConsumerSecret(e.target.value)}
+            required
+          />
+          <span className="text-sm mt-2">
+            Unsure where to find your API keys?{" "}
+            <Link href="#" className="text-blue-800 font-bold">
+              Follow this guide
+            </Link>
+          </span>
         </div>
         <div className="mb-12">
           <h3 className="text-2xl font-bold mb-5">

@@ -137,7 +137,7 @@ export default function Register() {
                   <div className="text-lg font-bold">Hold your horses...</div>
                 </div>
               )}
-              <h1 className="text-3xl font-bold mb-5 text-gray-800">
+              <h1 className="text-4xl md:text-7xl font-bold mb-8 text-gray-800">
                 Register
               </h1>
               {serverErrors &&
@@ -202,7 +202,7 @@ export default function Register() {
               </div>
               <label
                 htmlFor="terms"
-                className="flex items-center space-x-3 mb-5"
+                className="ml-1 flex items-center space-x-3 mb-5"
               >
                 <input
                   type="checkbox"
@@ -221,7 +221,7 @@ export default function Register() {
               </label>
               <label
                 htmlFor="subscribe"
-                className="flex items-center space-x-3 mb-5"
+                className="ml-1 flex items-center space-x-3 mb-5"
               >
                 <input
                   type="checkbox"
@@ -238,7 +238,7 @@ export default function Register() {
               <Button onClick={() => handleSubmit()}>Register</Button>
               <p className="mt-5">
                 Already have an account?{" "}
-                <Link href={"login/"} className="text-pink-600 font-bold">
+                <Link href={"login/"} className="text-blue-800 font-bold">
                   Log In
                 </Link>
               </p>

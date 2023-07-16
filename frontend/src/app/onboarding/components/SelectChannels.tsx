@@ -67,7 +67,7 @@ export default function SelectChannels({
     const data = await response.json();
   };
 
-  const handleClick = (id: string) => {
+  const handleChannelClick = (id: string) => {
     setChannels((prev) => {
       const index = prev.indexOf(id);
 
@@ -84,11 +84,11 @@ export default function SelectChannels({
       <button
         className={`px-6 py-6 rounded-xl p-8 text-lg md:text-2xl capitalize border border-2 border-solid ${
           channels && channels.includes(id)
-            ? "border-pink-600"
+            ? "border-blue-800"
             : "border-gray-200"
         }`}
         id={id}
-        onClick={(e) => handleClick((e.target as HTMLElement).id)}
+        onClick={(e) => handleChannelClick((e.target as HTMLElement).id)}
       >
         {id}
       </button>

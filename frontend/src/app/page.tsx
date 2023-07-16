@@ -56,8 +56,8 @@ export default function Home() {
 
   return (
     <div className="container mx-auto">
-      <div className="flex justify-center items-center md:h-screen p-6">
-        <div className="w-1/2">
+      <div className="flex flex-col md:flex-row justify-center items-center md:h-screen p-6">
+        <div className="md:w-1/2 ">
           <span className="text-sm inline-block border border-gray-500 px-3 py-2 rounded-full mb-4 text-gray-700">
             Subscribe and receive $20 worth of OpenAI credits
           </span>
@@ -73,7 +73,7 @@ export default function Home() {
             Instantly give them the answers they need.
           </h2>
           <div className="bg-gray-100 px-4 md:px-8 py-4 md:py-8 rounded-3xl shadow-xl shadow-gray-200 border border-white">
-            <h3 className="text-3xl text-blue-800 font-bold mb-3">
+            <h3 className="text-xl md:text-3xl text-blue-800 font-bold mb-3">
               Get 20$ Worth of Credits
             </h3>
             <p className="mb-6 text-gray-800">
@@ -108,7 +108,7 @@ export default function Home() {
               />
               <button
                 type="submit"
-                className="px-6 bg-blue-800 text-white flex-1 rounded-full text-lg font-bold border border-2 border-gray-200"
+                className="px-6 py-2 bg-blue-800 text-white rounded-full text-lg font-bold border border-2 border-gray-200"
               >
                 Subscribe
               </button>
@@ -122,7 +122,7 @@ export default function Home() {
             viewBox="0 0 24 24"
             strokeWidth={2}
             stroke="currentColor"
-            className="w-6 h-6 text-blue-800"
+            className="w-6 h-6 text-blue-800 hidden md:block"
           >
             <path
               strokeLinecap="round"
@@ -130,11 +130,25 @@ export default function Home() {
               d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3"
             />
           </svg>
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 24 24"
+            strokeWidth={2}
+            stroke="currentColor"
+            className="mt-4 mb-3 w-6 h-6 text-blue-800 md:hidden "
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              d="M12 4.5v15m0 0l6.75-6.75M12 19.5l-6.75-6.75"
+            />
+          </svg>
         </div>
-        <div className="w-1/2 flex flex-col">
+        <div className="md:w-1/2 flex flex-col">
           <h3 className="font-bold text-2xl text-center mb-6">Try it</h3>
           <div className="bg-white flex flex-col flex-grow border border-gray-300 rounded-3xl p-4 md:p-8 shadow-xl shadow-gray-200">
-            <div className="h-96 flex-grow border border-gray-300 rounded-3xl mb-6 py-3 px-4 text-gray-500"></div>
+            <div className="h-48 md:h-96 flex-grow border border-gray-300 rounded-3xl mb-6 py-3 px-4 text-gray-500"></div>
             <Search />
             <p className="mt-4 text-gray-600 text-center italic">
               Try for example &apos;Which shoes are great for hiking?&apos;

@@ -246,7 +246,7 @@ export default function Home() {
                 className="block self-end"
               >
                 <div className="border border-gray-300 p-4 md:px-5 md:py-4 rounded-3xl">
-                  <p>Thank you! What's the return policy at this store?</p>
+                  <p>Thank you! What&apos;s the return policy at this store?</p>
                 </div>
               </motion.div>
               <motion.div

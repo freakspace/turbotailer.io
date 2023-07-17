@@ -43,6 +43,7 @@ export default function Search() {
         onFocus={() => setIsActive(true)}
         value={message}
         onChange={(e) => setMessage(e.target.value)}
+        disabled
       />
       <svg
         xmlns="http://www.w3.org/2000/svg"

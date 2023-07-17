@@ -27,6 +27,6 @@ class User(AbstractUser):
         return reverse("users:detail", kwargs={"username": self.username})
 
 class Subscriber(models.Model):
-    name = CharField(_("Name of Subscriber"), blank=True, max_length=255)
-    email = CharField(_("Email of Subscriber"), blank=True, max_length=255)
+    name = CharField(_("Name of Subscriber"), max_length=255)
+    email = CharField(_("Email of Subscriber"), max_length=255, unique=True)
     created = models.DateTimeField(_("Date of subscription"), auto_now_add=True)

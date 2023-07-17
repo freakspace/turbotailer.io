@@ -1,4 +1,7 @@
 from django.contrib.auth import get_user_model
+from django.db import IntegrityError
+
+
 from rest_framework import status
 from rest_framework.decorators import action
 from rest_framework.mixins import ListModelMixin, RetrieveModelMixin, UpdateModelMixin
@@ -51,8 +54,11 @@ class UserViewSet(RetrieveModelMixin, ListModelMixin, UpdateModelMixin, GenericV
         if serializer.is_valid(raise_exception=True):
             name = request.data.get('name')
             email = request.data.get('email')
-            Subscriber.objects.create(name=name, email=email)
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
+            try:
+                Subscriber.objects.create(name=name, email=email)
+                return Response(serializer.data, status=status.HTTP_201_CREATED)
+            except IntegrityError:
+                return Response({"error": "That e-mail is already subscribed"}, status=status.HTTP_400_BAD_REQUEST)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 

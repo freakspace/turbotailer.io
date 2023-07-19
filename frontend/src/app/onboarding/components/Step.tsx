@@ -7,15 +7,12 @@ import { IStep } from "../../../../typings";
 export default function Step({
   step,
   currentStep,
-  setCurrentStep,
-  isLoading,
 }: {
   step: IStep;
   currentStep: number;
-  setCurrentStep: React.Dispatch<React.SetStateAction<number>>;
-  isLoading: boolean;
 }) {
   const controls = useAnimation();
+
   useEffect(() => {
     controls.start({
       opacity: 1,
@@ -31,7 +28,6 @@ export default function Step({
 
   return (
     <motion.div
-      onClick={() => setCurrentStep((prev) => prev + 1)}
       variants={itemVariants} // set the variants
       initial="normal" // set the initial state
       animate={step.number === currentStep ? "active" : "normal"} // animate depending on the state

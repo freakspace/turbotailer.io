@@ -65,7 +65,7 @@ export default function Onboarding() {
   const [connectionError, setConnectionError] = useState("");
   const [isConnecting, setIsConnecting] = useState(false);
   const [currentStep, setCurrentStep] = useState(1);
-  const [onboardingSteps, setOnboardingSteps] = useState<IStep[]>();
+  const [onboardingSteps, setOnboardingSteps] = useState<IStep[]>(steps);
   const [isLoading, setIsLoading] = useState(true);
   const { token, setToken } = useContext(UserContext) as IContext;
   const { push } = useRouter();
@@ -148,20 +148,21 @@ export default function Onboarding() {
 
       if (data.length > 0) {
         let store: IStore = data[0];
+        let updatedSteps = [...steps];
 
         let step = 1;
         // Check has a store
         if (store.store_type) {
           setStoreName(store.name);
           setStoreId(store.id);
-          steps[0].is_finished = true;
+          updatedSteps[0].is_finished = true;
           step++;
         }
 
         // Check has channels
         if (store.channels.length > 0) {
           setSelectedChannels(store.channels.map((channel) => channel) || []);
-          steps[1].is_finished = true;
+          updatedSteps[1].is_finished = true;
           step++;
         }
 
@@ -174,24 +175,24 @@ export default function Onboarding() {
           setBaseUrl(store.store_type.base_url);
           setConsumerKey(store.store_type.consumer_key);
           setConsumerSecret(store.store_type.consumer_secret);
-          steps[2].is_finished = true;
+          updatedSteps[2].is_finished = true;
           step++;
         }
 
         if (hasConnection) {
-          steps[3].is_finished = true;
+          updatedSteps[3].is_finished = true;
           step++;
         }
 
         setCurrentStep(step);
+        setOnboardingSteps(updatedSteps);
       }
 
-      setOnboardingSteps(steps);
       setIsLoading(false);
     };
 
     getUserStores();
-  }, [storeId, consumerKey, consumerSecret, hasConnection, token, currentStep]);
+  }, [currentStep]);
 
   // Check if user is logged in
   useEffect(() => {
@@ -199,7 +200,7 @@ export default function Onboarding() {
       push("login/");
     }
   }, [push, token]);
-
+  console.log(onboardingSteps);
   return (
     <div className="md:w-1/3 mx-auto mt-10 p-5">
       <div className="">
@@ -215,13 +216,7 @@ export default function Onboarding() {
           ) : (
             onboardingSteps &&
             onboardingSteps.map((step, id) => (
-              <Step
-                key={id}
-                step={step}
-                currentStep={currentStep}
-                setCurrentStep={setCurrentStep}
-                isLoading={isLoading}
-              />
+              <Step key={id} step={step} currentStep={currentStep} />
             ))
           )}
         </div>

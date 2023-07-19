@@ -18,11 +18,15 @@ class UpdateWoocommerceStoreSerializer(serializers.Serializer):
     base_url = serializers.CharField(max_length=255, required=False)
 
 
-class CreateChannelSerializer(serializers.Serializer):
-    store_id = serializers.CharField(max_length=255)
-    channels = serializers.ListField(
+class IChannelSerializer(serializers.Serializer):
+    channel = serializers.CharField(max_length=255)
+    fields = serializers.ListField(
         child=serializers.CharField(max_length=255)
     )
+
+class CreateChannelSerializer(serializers.Serializer):
+    store_id = serializers.CharField(max_length=255)
+    channels = IChannelSerializer(many=True)
 
 class GetChannelFieldsSerializer(serializers.Serializer):
     channel_id = serializers.CharField(max_length=255)

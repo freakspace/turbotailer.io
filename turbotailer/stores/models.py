@@ -80,6 +80,33 @@ class WooCommerceStore(models.Model):
 
     def get_connection_class(self):
         return self.connection_class
+    
+    def optional_fields(self):
+        return [{
+            "channel": "products",
+            "fields": [
+                "name", 
+                "description", 
+                "short_description",
+                "sku",
+                "price",
+                "regular_price",
+                "on_sale",
+                "categories",
+                "images",
+                "attributes"
+                ],
+            }]
+    
+    def required_fields(self):
+        return [{
+            "channel": "products",
+            "fields": [
+                "id", 
+                "permalink", 
+                "date_modified_gmt"
+                ],
+            }]
 
 
 class Channel(models.Model):
@@ -100,45 +127,16 @@ class Channel(models.Model):
     fields = JSONField(_("Fields"), help_text=_("Defines which fields will be fetched and included in the vectorstore"), blank=True, null=True, default=list)
 
     def get_available_fields(self):
-
-        fields_optional = {
-                "WooCommerceStore" : {
-                    "products": [
-                        "name", 
-                        "description", 
-                        "short_description",
-                        "sku",
-                        "price",
-                        "regular_price",
-                        "on_sale",
-                        "categories",
-                        "images",
-                        "attributes"
-                        ],
-                    "categories": [],
-                    "orders": []
-                }
-            }
         
-        fields_required = {
-                "WooCommerceStore" : {
-                    "products": ["id", "permalink", "date_modified_gmt"],
-                    "categories": [],
-                    "orders": []
-                }
-            }
-
-        # Get the name of model i.e. 'WooCommerceStore'
-        store_type_name = self.store.store_type.__class__.__name__
-        
-        # Get all optional fields related to a channel i.e. 'products'
-        all_fields = fields_optional[store_type_name][self.channel]
+        # Get fields from store type object
+        optional_fields = self.store.store_type.optional_fields
+        required_fields = self.store.store_type.required_fields
 
         # Prepare and return final data of selected fields, unselected fields and required fields
         data = {
             "selected": self.fields,
-            "unselected": [field for field in all_fields if field not in self.fields],
-            "required": fields_required[store_type_name][self.channel]
+            "unselected": [field for field in optional_fields["fields"] if field not in self.fields],
+            "required": required_fields["fields"]
         }
 
         return data

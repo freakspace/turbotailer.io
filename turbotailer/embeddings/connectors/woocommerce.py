@@ -21,6 +21,7 @@ logger = logging.getLogger(__name__)
 # TODO Initialize connector with channels (products, categories etc.)
 # TODO Check for https / http and change auth depending on it
 # TODO Prepare keys for each of the channels
+# TODO Handle http / https
 class WoocommerceConnector:
     def __init__(
             self, 
@@ -95,7 +96,7 @@ class WoocommerceConnector:
             self.connect()
         
         while True:
-            url = f"https://{self.base_url}{PRODUCTS_ENDPOINT}?per_page={self.per_page}&page={page_number}"
+            url = f"http://{self.base_url}{PRODUCTS_ENDPOINT}?per_page={self.per_page}&page={page_number}"
 
             logger.info(f"Calling: {url}")
 

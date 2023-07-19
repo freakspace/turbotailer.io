@@ -83,6 +83,8 @@ function SelectStore({
       } else {
         const response = await createWooCommerce(token, storeName, baseUrl);
         if (response.ok) {
+          const data = await response.json();
+          setStoreId(data.store_id);
           setCurrentStep((prev) => prev + 1);
         } else {
           // NEED ERROR HERE

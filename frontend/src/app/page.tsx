@@ -121,7 +121,7 @@ export default function Home() {
     };
 
     sequence();
-  }, []);
+  }, [messageFour, messageOne, messageThree, messageTwo]);
 
   return (
     <div className="container mx-auto">

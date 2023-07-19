@@ -22,7 +22,7 @@ export default function Step({
       x: 0,
       transition: { duration: 0.25 },
     });
-  });
+  }, [currentStep, step.number]);
 
   const itemVariants = {
     normal: { flexGrow: 0, transition: { duration: 0.25 } },

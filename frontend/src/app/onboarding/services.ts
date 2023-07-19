@@ -74,3 +74,76 @@ export const verifyConnection = async (
 
   return response
 };
+
+
+export const getStoreChannelFields = async (
+  token: string, 
+  channelId: string,  
+  ) => {
+
+    
+  const response = await fetch(
+    `${process.env.NEXT_PUBLIC_DJANGO_API_URL}/api/stores/get_channel_fields/`,
+    {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: "Token " + token,
+      },
+      body: JSON.stringify({
+        channel_id: channelId,
+      }),
+    }
+  );
+
+  return response
+};
+
+
+export const setStoreChannelFields = async (
+  token: string, 
+  channelId: string,  
+  fields: string[]
+  ) => {
+
+    
+  const response = await fetch(
+    `${process.env.NEXT_PUBLIC_DJANGO_API_URL}/api/stores/set_channel_fields/`,
+    {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: "Token " + token,
+      },
+      body: JSON.stringify({
+        channel_id: channelId,
+        fields: fields
+      }),
+    }
+  );
+
+  return response
+};
+
+// Fetch all the available channels and fields the user can select depending on storetype
+export const getAvailableChannelsAndFields = async (
+  token: string, 
+  storeId: string,  
+  ) => {
+
+  const response = await fetch(
+    `${process.env.NEXT_PUBLIC_DJANGO_API_URL}/api/stores/get_available_channels_and_fields/`,
+    {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: "Token " + token,
+      },
+      body: JSON.stringify({
+        store_id: storeId,
+      }),
+    }
+  );
+
+  return response
+};

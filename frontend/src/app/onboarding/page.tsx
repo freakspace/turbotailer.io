@@ -11,7 +11,6 @@ import IntegrateWooCommerce from "./components/IntegrateWooCommerce";
 import VerifyConnection from "./components/VerifyConnection";
 import Embedding from "./components/Embedding";
 import Step from "./components/Step";
-import { verifyConnection } from "./services";
 let steps: IStep[] = [
   {
     is_finished: false,
@@ -58,7 +57,7 @@ export default function Onboarding() {
   const [storeId, setStoreId] = useState<string>("");
   const [storeType, setStoreType] = useState<string>("WooCommerce");
   const [storeName, setStoreName] = useState<string>("");
-  const [channels, setChannels] = useState<string[]>([]);
+  const [selectedChannels, setSelectedChannels] = useState<IChannel[]>([]);
   const [consumerKey, setConsumerKey] = useState<string>("");
   const [consumerSecret, setConsumerSecret] = useState<string>("");
   const [baseUrl, setBaseUrl] = useState<string>("");
@@ -90,8 +89,8 @@ export default function Onboarding() {
       <SelectChannels
         token={token}
         storeId={storeId}
-        channels={channels}
-        setChannels={setChannels}
+        selectedChannels={selectedChannels}
+        setSelectedChannels={setSelectedChannels}
         setCurrentStep={setCurrentStep}
       />
     ),
@@ -122,7 +121,13 @@ export default function Onboarding() {
         isConnecting={isConnecting}
       />
     ),
-    5: <Embedding token={token} storeId={storeId} channels={channels} />,
+    5: (
+      <Embedding
+        token={token}
+        storeId={storeId}
+        selectedChannels={selectedChannels}
+      />
+    ),
   };
 
   // Fetch Store and Prepare steps
@@ -155,7 +160,7 @@ export default function Onboarding() {
 
         // Check has channels
         if (store.channels.length > 0) {
-          setChannels(store.channels.map((channel) => channel.channel) || []);
+          setSelectedChannels(store.channels.map((channel) => channel) || []);
           steps[1].is_finished = true;
           step++;
         }
@@ -186,7 +191,7 @@ export default function Onboarding() {
     };
 
     getUserStores();
-  }, [consumerKey, consumerSecret, hasConnection, token, currentStep]);
+  }, [storeId, consumerKey, consumerSecret, hasConnection, token, currentStep]);
 
   // Check if user is logged in
   useEffect(() => {

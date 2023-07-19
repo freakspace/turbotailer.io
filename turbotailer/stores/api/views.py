@@ -133,7 +133,7 @@ class StoresViewSet(RetrieveModelMixin, ListModelMixin, GenericViewSet):
 
                     woo_content_type = ContentType.objects.get_for_model(WooCommerceStore)
 
-                    Store.objects.create(
+                    store = Store.objects.create(
                         user=request.user,
                         name=store_name,
                         content_type=woo_content_type,
@@ -143,7 +143,7 @@ class StoresViewSet(RetrieveModelMixin, ListModelMixin, GenericViewSet):
             except Exception as e:
                 return Response({"error": f"Error creating store: {e}"})
 
-            return Response({"message": f"WooCommerce store created succesfully"})
+            return Response({"message": f"WooCommerce store created succesfully", "store_id": store.id})
 
         else:
             return Response({"error": "You are not authenticated!"}, status=status.HTTP_401_UNAUTHORIZED)
@@ -174,15 +174,19 @@ class StoresViewSet(RetrieveModelMixin, ListModelMixin, GenericViewSet):
             
             channels = serializer.validated_data['channels']
 
+
             created = 0
 
             for channel in channels:
+                name = channel.get("name")
+                fields = channel.get("fields")
                 try:
-                    Channel.objects.get(store=store, channel=channel)
+                    Channel.objects.get(store=store, channel=name)
                 except Channel.DoesNotExist:
                     Channel.objects.create(
                         store=store, 
-                        channel=channel
+                        channel=name,
+                        fields=fields
                     )
 
                     created += 1
@@ -225,7 +229,6 @@ class StoresViewSet(RetrieveModelMixin, ListModelMixin, GenericViewSet):
     
     @action(detail=False, methods=['post'])
     def set_channel_fields(self, request):
-        # TODO Create multiple at one time
         serializer = SetChannelFieldsSerializer(data=request.data)
 
         if not serializer.is_valid():
@@ -253,6 +256,31 @@ class StoresViewSet(RetrieveModelMixin, ListModelMixin, GenericViewSet):
             channel.save()
 
             return Response({f"message": "Fields updated:"})
+
+        else:
+            return Response({"error": "You are not authenticated!"}, status=status.HTTP_401_UNAUTHORIZED)
+    
+
+    @action(detail=False, methods=['post'])
+    def get_available_channels_and_fields(self, request):
+
+        if request.user.is_authenticated:
+
+            store_id = request.data.get('store_id')
+
+            if not is_valid_uuid(store_id):
+                return Response({"error": "Provided ID is not of valid type (UUID)"})
+
+            try:
+                store = Store.objects.get(id=store_id)
+            except Channel.DoesNotExist:
+                return Response({"error": "Store doesn't exist"})
+
+            
+            if store.user != request.user:
+                return Response({"error": "You are not the owner of that store"})
+
+            return Response(store.store_type.optional_fields())
 
         else:
             return Response({"error": "You are not authenticated!"}, status=status.HTTP_401_UNAUTHORIZED)

@@ -12,6 +12,7 @@ from turbotailer.embeddings.tasks import create_batch
 
 # TODO when i parse the products i need to check they conform with the schema, otherwise skip.
 # TODO I need to check if the integration is up and running
+# TODO Currently hardcoded for products.. Need to check for channels.
 @admin.action(description='Query products from endpoint')
 def admin_get_products(self, request, queryset):
 
@@ -54,13 +55,8 @@ def admin_get_products(self, request, queryset):
         # Get the connection class
         connector = obj.channel.store.store_type.get_connection_class()
         
-        # TODO This has to be refactored and put in the class, i guess?
-        woocommerce = connector(
-            base_url=obj.channel.store.store_type.base_url,
-            consumer_key=obj.channel.store.store_type.consumer_key, 
-            consumer_secret=obj.channel.store.store_type.consumer_secret,
-            per_page=batch_size
-            )
+        # Init the connection
+        woocommerce = connector.from_model(obj.channel.store.id)
         
         # Make connection
         try:
@@ -84,7 +80,7 @@ def admin_get_products(self, request, queryset):
         document_batch = []
 
         count = 0
-        stop_after = 352
+        stop_after = 32
         for product in products:
             count += 1
             # TODO The create document should also be dependent on connector
@@ -166,4 +162,5 @@ def admin_get_products(self, request, queryset):
         # Save status to embedding task
         obj.status = "Complete"
         obj.save()
+        
     self.message_user(request, "Done")

@@ -4,14 +4,16 @@ import { useEffect, useState } from "react";
 import StepWrapper from "./StepWrapper";
 import Button from "@/app/components/Button";
 
+import { IChannel } from "../../../../typings";
+
 export default function Embedding({
   token,
   storeId,
-  channels,
+  selectedChannels,
 }: {
   token: string | null;
   storeId: string | undefined;
-  channels: string[];
+  selectedChannels: IChannel[];
 }) {
   const [estimatedTokens, setEstimatedTokens] = useState<number>(0);
   const [estimatedPrice, setEstimatedPrice] = useState<number>(0);
@@ -55,6 +57,7 @@ export default function Embedding({
   };
 
   const startEmbedding = async () => {
+    const channels = selectedChannels.map((channel) => channel.channel);
     const response = await fetch(
       `${process.env.NEXT_PUBLIC_DJANGO_API_URL}/api/embeddings/create_task/`,
       {
@@ -70,7 +73,7 @@ export default function Embedding({
       }
     );
     const data = await response.json();
-
+    console.log(data);
     if (response.ok) {
       push("dashboard/");
     }

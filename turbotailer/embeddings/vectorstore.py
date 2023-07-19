@@ -32,7 +32,7 @@ class Vectorstore:
                     api_key=settings.PINECONE_API_KEY, 
                     environment=settings.PINECONE_ENVIRONMENT
                 )
-            index = pinecone.Index("demo")
+            index = pinecone.Index("turbotailer")
             self.vectorstore = Pinecone(index, self.embeddings.embed_query, "text")
             Vectorstore.instance = self
 

@@ -25,7 +25,8 @@ export interface IStore {
 }
 
 export interface IChannel {
-  id: string
   channel: string
-  is_active: bool
+  fields: string[]
+  id: string | undefined | null
+  store: string | undefined
 }

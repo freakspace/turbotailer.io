@@ -3,51 +3,29 @@
 import { useRouter } from "next/navigation";
 import { useEffect, useContext, useState } from "react";
 import { UserContext, IContext } from "@/context/UserContext";
-import { ICard } from "../../../typings";
+import { ICard, INavItem, IStore } from "../../../typings";
 import Card from "../components/Card";
+import Navigation from "./components/navigation";
 
-const settings: ICard[] = [
-  {
-    title: "Site",
-    subtitle: "https://www.somestore.com",
-  },
-  {
-    title: "Language model",
-    subtitle: "gpt-3.5-turbo",
-  },
-  {
-    title: "Embedding model",
-    subtitle: "text-embedding-ada-002",
-  },
-  {
-    title: "Last update",
-    subtitle: "4 hours ago",
-  },
-];
-
-const channels: ICard[] = [
-  {
-    title: "Products",
-    subtitle: "Enabled",
-  },
-  {
-    title: "Categories",
-    subtitle: "Disabled",
-  },
-  {
-    title: "Pages",
-    subtitle: "Disabled",
-  },
-  {
-    title: "Orders",
-    subtitle: "Disabled",
-  },
-];
+import Overview from "./components/overview";
+import Chat from "./components/chat";
 
 export default function Dashboard() {
+  const [activePage, setActivePage] = useState("chat");
+  const [store, setStore] = useState<IStore | undefined>();
   const { token, setToken } = useContext(UserContext) as IContext;
-  const [userName, setUserName] = useState<string>("");
   const { push } = useRouter();
+
+  const navItems: Record<string, INavItem> = {
+    overview: {
+      name: "Overview",
+      component: <Overview />,
+    },
+    chat: {
+      name: "Chat",
+      component: <Chat storeId={store?.id} />,
+    },
+  };
 
   useEffect(() => {
     if (!token) {
@@ -55,29 +33,39 @@ export default function Dashboard() {
     }
   }, [push, token]);
 
+  useEffect(() => {
+    const getUserStores = async () => {
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_DJANGO_API_URL}/api/stores/get_user_stores/`,
+        {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: "Token " + token,
+          },
+        }
+      );
+
+      if (response.ok) {
+        let data: IStore[] = await response.json();
+        console.log(data);
+        setStore(data[0]); // Support only 1 store now -> add more later
+      } else {
+        // Some error here
+      }
+    };
+
+    getUserStores();
+  }, [token]);
+  console.log(store);
   return (
-    <div className="container mx-auto mt-10">
-      <div className="">
-        <h1 className="text-5xl text-pink-600 font-bold mb-10">Welcome</h1>
-        <div className="grid grid-cols-1 gap-8">
-          <div className="">
-            <h2 className="text-4xl font-bold mb-3">Information</h2>
-            <div className="grid grid-cols-2 gap-8 bg-gray-50 border border-solid border-gray-50 p-8 rounded-2xl shadow-lg">
-              {settings.map((card, key) => (
-                <Card key={key} card={card} />
-              ))}
-            </div>
-          </div>
-          <div className="">
-            <h2 className="text-4xl font-bold mb-3">Channels</h2>
-            <div className="grid grid-rows-1 gap-8 bg-gray-50 border border-solid border-gray-50 p-8 rounded-2xl shadow-lg">
-              {channels.map((card, key) => (
-                <Card key={key} card={card} />
-              ))}
-            </div>
-          </div>
-        </div>
-      </div>
+    <div className="md:w-1/3 mx-auto mt-10 p-5">
+      <Navigation
+        navItems={navItems}
+        activePage={activePage}
+        setActivePage={setActivePage}
+      />
+      {navItems[activePage].component}
     </div>
   );
 }

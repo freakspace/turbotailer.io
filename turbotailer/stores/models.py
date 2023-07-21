@@ -96,6 +96,14 @@ class WooCommerceStore(models.Model):
                 "images",
                 "attributes"
                 ],
+            },
+            {
+            "channel": "pages",
+            "fields": [],
+            },
+            {
+            "channel": "posts",
+            "fields": [],
             }]
     
     def required_fields(self):

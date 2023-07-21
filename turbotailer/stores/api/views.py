@@ -288,6 +288,7 @@ class StoresViewSet(RetrieveModelMixin, ListModelMixin, GenericViewSet):
 
     @action(detail=False, methods=['get'])
     def get_user_stores(self, request):
+        print("CALLING STORE ENDPOINT")
         if request.user.is_authenticated:
             try:
                 stores = Store.objects.filter(user=request.user)

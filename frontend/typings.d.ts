@@ -27,6 +27,11 @@ export interface IStore {
 export interface IChannel {
   channel: string
   fields: string[]
-  id: string | undefined | null
+  id: string | undefined
   store: string | undefined
+}
+
+export interface INavItem {
+  name: string;
+  component: JSX.Element;
 }

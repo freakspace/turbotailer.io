@@ -32,6 +32,7 @@ class PromptsViewSet(viewsets.ViewSet):
             query = query,
             namespace = namespace
         )
+        print(search)
         end_time = time.time()
         elapsed_time = end_time - start_time
         print(f"It took {elapsed_time} seconds to get search result")
@@ -42,7 +43,6 @@ class PromptsViewSet(viewsets.ViewSet):
     # TODO Check if ID matches 
     @action(detail=False, methods=['get'])
     def test(self, request):
-        print("test")
         response = Response({"message": "Prompter"})
         response["Access-Control-Allow-Origin"] = "*"
         return response

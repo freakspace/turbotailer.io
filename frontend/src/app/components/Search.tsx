@@ -2,7 +2,7 @@
 
 import { useState, useRef, useEffect } from "react";
 
-export default function Search() {
+export default function Search({ storeId }: { storeId: string | undefined }) {
   const [isActive, setIsActive] = useState(false);
   const [message, setMessage] = useState("");
   const inputRef = useRef<HTMLInputElement>(null);
@@ -16,8 +16,33 @@ export default function Search() {
     }
   };
 
-  const submitChat = () => {
-    console.log(message);
+  const prompt = async () => {
+    const response = await fetch(
+      `${process.env.NEXT_PUBLIC_DJANGO_API_URL}/api/prompts/prompt/`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          namespace: storeId,
+          query: message,
+        }),
+      }
+    );
+
+    return response;
+  };
+
+  const submitChat = async () => {
+    const response = await prompt();
+    if (response.ok) {
+      const data = await response.json();
+      console.log(data);
+    } else {
+      // Some error
+    }
+    setMessage("");
   };
 
   useEffect(() => {
@@ -43,7 +68,6 @@ export default function Search() {
         onFocus={() => setIsActive(true)}
         value={message}
         onChange={(e) => setMessage(e.target.value)}
-        disabled
       />
       <svg
         xmlns="http://www.w3.org/2000/svg"

@@ -200,7 +200,7 @@ export default function Onboarding() {
       push("login/");
     }
   }, [push, token]);
-  console.log(onboardingSteps);
+
   return (
     <div className="md:w-1/3 mx-auto mt-10 p-5">
       <div className="">

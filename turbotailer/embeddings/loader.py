@@ -1,166 +1,157 @@
-from typing import List, Any
 from pytz import UTC
 from datetime import datetime
 
+from django.contrib import admin
 from django.utils import timezone
 from django.db import transaction
 from django.utils import timezone
-from django.contrib import admin
 
 from turbotailer.embeddings.tasks import create_batch
+from turbotailer.embeddings.models import EmbeddingTask
 
 
-# TODO when i parse the products i need to check they conform with the schema, otherwise skip.
-# TODO I need to check if the integration is up and running
-# TODO Currently hardcoded for products.. Need to check for channels.
-@admin.action(description='Query products from endpoint')
-def admin_get_products(self, request, queryset):
 
+def create_vector_batches(embedding_task: EmbeddingTask):
     from turbotailer.embeddings.models import Content, VectorTask
+    # vectorstore_instance = Vectorstore.get_instance()
+
+    embedding_task.status = "In progress"
+    embedding_task.save()
+
+    # TODO Refactor
+    fields = embedding_task.channel.get_available_fields()
+
+    print(fields)
+
+    keys =  {**fields["selected"], **fields["required"]}
+
+
+    """ keys = {
+        "short_description": None, 
+        "name": None,
+        "description": None,
+        "sku": None,
+        "price": None,
+        "regular_price": None,
+        "on_sale": None,
+        "categories": ["name"],
+        "images": ["name", "src", "alt"],
+        "attributes": ["name", "options"],
+        "id": None,
+        "permalink": None,
+        "date_modified_gmt": None
+    } """
     
-    # TODO Filter only active stores
-    # TODO Filter only active integrations
-    # TODO Filter for channel (all fields has to be set)
-    for obj in queryset:
+    batch_size = 32
 
-        # vectorstore_instance = Vectorstore.get_instance()
+    # TODO Has to take the channel in to consideration
+    # Get the connection class
+    connector = embedding_task.channel.store.store_type.get_connection_class()
+    
+    # Init the connection
+    woocommerce = connector.from_model(embedding_task.channel.store.id)
+    
+    # Make connection
+    try:
+        woocommerce.connect()
+    except Exception as e:
+        embedding_task.message = e
+        embedding_task.status = "Failed"
+        embedding_task.save()
+        return # Return error?
 
-        obj.status = "In progress"
-        obj.save()
+    # Get products from endpoint
+    try:
+        products = woocommerce.get_products()
+    except Exception as e:
+        # TODO Add message to task
+        embedding_task.message = e
+        embedding_task.status = "Failed"
+        embedding_task.save()
+        return # Return error?
 
-        # TODO Refactor
-        # keys_data = obj.channel.get_available_fields()
-        # keys =  keys_data["selected"] + keys_data["required"]
+    document_batch = []
 
-        keys = {
-            "short_description": None, 
-            "name": None,
-            "description": None,
-            "sku": None,
-            "price": None,
-            "regular_price": None,
-            "on_sale": None,
-            "categories": ["name"],
-            "images": ["name", "src", "alt"],
-            "attributes": ["name", "options"],
-            "id": None,
-            "permalink": None,
-            "date_modified_gmt": None
-        }
-        
-        batch_size = 32
-
-        # TODO Has to take the channel in to consideration
-
-        # Get the connection class
-        connector = obj.channel.store.store_type.get_connection_class()
-        
-        # Init the connection
-        woocommerce = connector.from_model(obj.channel.store.id)
-        
-        # Make connection
+    count = 0
+    stop_after = None
+    for product in products:
+        count += 1
+        # TODO The create document should also be dependent on connector
+        document = woocommerce.create_document(item=product, keys=keys)
         try:
-            woocommerce.connect()
-        except Exception as e:
-            obj.message = e
-            obj.status = "Failed"
-            obj.save()
-            break
-
-        # Get products from endpoint
-        try:
-            products = woocommerce.get_products()
-        except Exception as e:
-            # TODO Add message to task
-            obj.message = e
-            obj.status = "Failed"
-            obj.save()
-            break
-
-        document_batch = []
-
-        count = 0
-        stop_after = 32
-        for product in products:
-            count += 1
-            # TODO The create document should also be dependent on connector
-            document = woocommerce.create_document(item=product, keys=keys)
-            try:
-                with transaction.atomic():
-                    try:
-                        content = Content.objects.get(
-                            channel=obj.channel, 
-                            store=obj.channel.store, 
-                            identifier=document.metadata["id"]
-                            )
-                        last_updated = datetime.fromisoformat(document.metadata["date_modified_gmt"])
-                        last_updated_tz = timezone.make_aware(last_updated, timezone=UTC)
-                        # Skip content that's not updated
-                        if content.updated < last_updated_tz:
-                            content.updated = timezone.now()
-                            content.save()
-                            # Need a reference for document when creating chunks
-                            document = woocommerce.update_document_metadata(
-                                document=document, 
-                                data={
-                                    "content_id": str(content.id), 
-                                    "updated": True
-                                    }
-                                )
-                            
-                            document_batch.append(document)
-                    except Content.DoesNotExist:
-
-                        content = Content.objects.create(
-                            channel=obj.channel,
-                            store=obj.channel.store,
-                            identifier=document.metadata["id"],
-                            updated=timezone.now(),
+            with transaction.atomic():
+                try:
+                    content = Content.objects.get(
+                        channel=embedding_task.channel, 
+                        store=embedding_task.channel.store, 
+                        identifier=document.metadata["id"]
                         )
+                    last_updated = datetime.fromisoformat(document.metadata["date_modified_gmt"])
+                    last_updated_tz = timezone.make_aware(last_updated, timezone=UTC)
+                    # Skip content that's not updated
+                    if content.updated < last_updated_tz:
+                        content.updated = timezone.now()
+                        content.save()
+                        # Need a reference for document when creating chunks
                         document = woocommerce.update_document_metadata(
-                                document=document, 
-                                data={
-                                    "content_id": str(content.id), 
-                                    }
-                                )
+                            document=document, 
+                            data={
+                                "content_id": str(content.id), 
+                                "updated": True
+                                }
+                            )
+                        
                         document_batch.append(document)
+                except Content.DoesNotExist:
 
-            except Exception as e:
-                print(f"Error occurred A: {e}")
-
-            if len(document_batch) == batch_size:
-
-                texts = [doc.page_content for doc in document_batch]
-                metadatas = [doc.metadata for doc in document_batch]
-                
-                create_batch.delay(
-                    texts=texts,
-                    metadatas=metadatas, 
-                    store_id=str(obj.channel.store.id)
+                    content = Content.objects.create(
+                        channel=embedding_task.channel,
+                        store=embedding_task.channel.store,
+                        identifier=document.metadata["id"],
+                        updated=timezone.now(),
                     )
-                
-                # Reset batches
-                document_batch = []
-            
-            if stop_after and count == stop_after:
-                break
+                    document = woocommerce.update_document_metadata(
+                            document=document, 
+                            data={
+                                "content_id": str(content.id), 
+                                }
+                            )
+                    document_batch.append(document)
 
-        # Check for products that didnt make a batch
-        if document_batch:
+        except Exception as e:
+            print(f"Error occurred A: {e}")
+
+        if len(document_batch) == batch_size:
+
             texts = [doc.page_content for doc in document_batch]
             metadatas = [doc.metadata for doc in document_batch]
-
-            """ VectorTask.objects.create(
-                messages=
-            ) """
+            
             create_batch.delay(
-                    texts=texts,
-                    metadatas=metadatas, 
-                    store_id=str(obj.channel.store.id)
-                    )
-
-        # Save status to embedding task
-        obj.status = "Complete"
-        obj.save()
+                texts=texts,
+                metadatas=metadatas, 
+                store_id=str(embedding_task.channel.store.id)
+                )
+            
+            # Reset batches
+            document_batch = []
         
-    self.message_user(request, "Done")
+        if stop_after and count == stop_after:
+            break
+
+    # Check for products that didnt make a batch
+    if document_batch:
+        texts = [doc.page_content for doc in document_batch]
+        metadatas = [doc.metadata for doc in document_batch]
+
+        """ VectorTask.objects.create(
+            messages=
+        ) """
+        create_batch.delay(
+                texts=texts,
+                metadatas=metadatas, 
+                store_id=str(embedding_task.channel.store.id)
+                )
+
+    # Save status to embedding task
+    embedding_task.status = "Complete"
+    embedding_task.save()

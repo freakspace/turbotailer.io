@@ -24,6 +24,8 @@ export interface IStore {
     model: string
 }
 
+type FieldValue = null | string | string[];
+
 export interface IChannel {
   channel: string
   fields: string[]

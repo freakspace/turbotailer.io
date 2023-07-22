@@ -108,7 +108,7 @@ export default function SelectChannels({
 
     prepareChannels();
   }, [storeId, token]);
-
+  console.log(selectedChannels);
   const Channel = ({ availableChannel }: { availableChannel: IChannel }) => {
     return (
       <div className="border-y py-4 px-4 bg-gray-50">
@@ -132,7 +132,7 @@ export default function SelectChannels({
             selectedChannel.channel === availableChannel.channel
         ) && (
           <div className="grid grid-cols-4 gap-2">
-            {availableChannel.fields.map((field, key) => (
+            {Object.keys(availableChannel.fields).map((field, key) => (
               <label key={key} className="flex items-center">
                 <input
                   type="checkbox"

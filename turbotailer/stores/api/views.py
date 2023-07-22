@@ -197,9 +197,9 @@ class StoresViewSet(RetrieveModelMixin, ListModelMixin, GenericViewSet):
             return Response({"error": "You are not authenticated!"}, status=status.HTTP_401_UNAUTHORIZED)
         
 
-    @action(detail=False, methods=['post'])
+    # TODO This is redundant i think
+    """ @action(detail=False, methods=['post'])
     def get_channel_fields(self, request):
-        # TODO Create multiple at one time
         serializer = GetChannelFieldsSerializer(data=request.data)
 
         if not serializer.is_valid():
@@ -224,7 +224,7 @@ class StoresViewSet(RetrieveModelMixin, ListModelMixin, GenericViewSet):
             return Response(channel.get_available_fields())
 
         else:
-            return Response({"error": "You are not authenticated!"}, status=status.HTTP_401_UNAUTHORIZED)
+            return Response({"error": "You are not authenticated!"}, status=status.HTTP_401_UNAUTHORIZED) """
         
     
     @action(detail=False, methods=['post'])

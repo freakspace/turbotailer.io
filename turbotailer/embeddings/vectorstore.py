@@ -5,6 +5,7 @@ from django.conf import settings
 
 from langchain.vectorstores import Pinecone
 from langchain.embeddings.huggingface import HuggingFaceEmbeddings
+from langchain.embeddings.openai import OpenAIEmbeddings
 import pinecone
 
 
@@ -27,7 +28,7 @@ class Vectorstore:
         if Vectorstore.instance is not None:
             raise Exception("This class is a singleton")
         else:
-            self.embeddings = HuggingFaceEmbeddings(model_kwargs = {'device': 'cpu'})
+            self.embeddings = OpenAIEmbeddings(openai_api_key=settings.OPENAPI_KEY)
             pinecone.init(
                     api_key=settings.PINECONE_API_KEY, 
                     environment=settings.PINECONE_ENVIRONMENT

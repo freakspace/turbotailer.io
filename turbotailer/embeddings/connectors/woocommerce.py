@@ -138,11 +138,9 @@ class WoocommerceConnector:
                 nested_items = item.get(key, [])
                 extracted_data[key] = []
                 for nested_item in nested_items:
-                    #print(subkeys)
                     nested_data = None
                     for subkey in subkeys:
                         if nested_item.get(subkey):
-                            #print(subkey)
                             if isinstance(nested_item.get(subkey), list):
                                 if key == "attributes":
                                     nested_data = nested_item["name"] + ": " + ", ".join(nested_item.get(subkey))

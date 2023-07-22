@@ -7,8 +7,6 @@ from django.utils.translation import gettext_lazy as _
 from django.contrib import admin
 from django.db.models.fields.json import JSONField
 
-from turbotailer.embeddings.loader import admin_get_products
-
 from turbotailer.stores.models import Store, Channel
 
 EMBEDDING_STATUS = (
@@ -73,6 +71,11 @@ class VectorTask(models.Model):
     status = models.CharField(_("Status"), choices=EMBEDDING_STATUS, default="Pending")
     batch_size = models.IntegerField()
 
+
+
 class EmbeddingTaskAdmin(admin.ModelAdmin):
-    actions=[admin_get_products]
+    # Import here otherwise circular import
+    from turbotailer.embeddings.actions import admin_create_batches
+    """ Creates vectors in batches """
+    actions=[admin_create_batches]
     list_display= ("id", "user", "created", "channel", "tokens_spent", "status")

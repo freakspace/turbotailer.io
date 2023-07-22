@@ -105,20 +105,21 @@ class EmbeddingsViewSet(viewsets.ViewSet):
             except Store.DoesNotExist:
                 return Response({"error": "Store doesn't exists"}, status=status.HTTP_400_BAD_REQUEST)
 
-            # e.g. ['products', 'categories']
-            for channel in channels:
+            for channel_id in channels:
 
                 count = 0
                 
                 try:
-                    channel = Channel.objects.get(channel=channel, store=store)
+                    channel_instance = Channel.objects.get(id=channel_id, store=store)
                 except Channel.DoesNotExist:
-                    logger.error(f"Unable to find channel '{channel}' for store {store}")
+                    logger.error(f"Unable to find channel '{channel_id}' for store {store}")
+                    continue
 
-                if channel.store.user != request.user:
+                if channel_instance.store.user != request.user:
                     return Response({"error": "You are not the owner of that channel!"}, status=status.HTTP_400_BAD_REQUEST)
 
-                existing_task = EmbeddingTask.objects.filter(channel=channel, status__in=["In progress", "Pending"])
+                # Check for existing tasks
+                existing_task = EmbeddingTask.objects.filter(channel=channel_instance, status__in=["In progress", "Pending"])
                 
                 # Skip existing tasks
                 if existing_task:
@@ -127,7 +128,7 @@ class EmbeddingsViewSet(viewsets.ViewSet):
                 try:
                     EmbeddingTask.objects.create(
                         user = request.user,
-                        channel = channel
+                        channel = channel_instance
                     )
                     count += 1
                 except Exception as e:

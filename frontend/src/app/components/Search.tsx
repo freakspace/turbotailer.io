@@ -1,10 +1,24 @@
 "use client";
 
 import { useState, useRef, useEffect } from "react";
+import { IMessage } from "../../../typings";
 
-export default function Search({ storeId }: { storeId: string | undefined }) {
+export default function Search({
+  storeId,
+  setMessageHistory,
+  setNotification,
+  setIsLoading,
+}: {
+  storeId: string | undefined;
+  setMessageHistory: React.Dispatch<React.SetStateAction<IMessage[]>>;
+  setNotification: React.Dispatch<React.SetStateAction<string>>;
+  setIsLoading: React.Dispatch<React.SetStateAction<boolean>>;
+}) {
   const [isActive, setIsActive] = useState(false);
-  const [message, setMessage] = useState("");
+  const [userMessage, setUserMessage] = useState<IMessage>({
+    text: "",
+    products: [],
+  });
   const inputRef = useRef<HTMLInputElement>(null);
 
   const handleClickOutside = (event: MouseEvent) => {
@@ -26,7 +40,7 @@ export default function Search({ storeId }: { storeId: string | undefined }) {
         },
         body: JSON.stringify({
           namespace: storeId,
-          query: message,
+          query: userMessage.text,
         }),
       }
     );
@@ -35,14 +49,29 @@ export default function Search({ storeId }: { storeId: string | undefined }) {
   };
 
   const submitChat = async () => {
+    setIsLoading(true);
+    if (!userMessage) {
+      setNotification("You need to add a message");
+      return;
+    }
+
+    setMessageHistory((prev) => [...prev, userMessage]);
     const response = await prompt();
     if (response.ok) {
       const data = await response.json();
+      console.log("Test A");
       console.log(data);
+      setMessageHistory((prev) => [...prev, data]);
+
+      setUserMessage({
+        text: "",
+        products: [],
+      });
     } else {
-      // Some error
+      setNotification("error");
+      const data = await response.json();
     }
-    setMessage("");
+    setIsLoading(false);
   };
 
   useEffect(() => {
@@ -53,6 +82,14 @@ export default function Search({ storeId }: { storeId: string | undefined }) {
       document.removeEventListener("mousedown", handleClickOutside);
     };
   }, []);
+
+  const handleUserMessage = (e: React.ChangeEvent<HTMLInputElement>) => {
+    let userMessage: IMessage = {
+      text: e.target.value,
+      products: [],
+    };
+    setUserMessage(userMessage);
+  };
 
   return (
     <div
@@ -66,8 +103,8 @@ export default function Search({ storeId }: { storeId: string | undefined }) {
         placeholder="Chat with 1,765 products"
         className="w-full focus:outline-none h-8 text-gray-500"
         onFocus={() => setIsActive(true)}
-        value={message}
-        onChange={(e) => setMessage(e.target.value)}
+        value={userMessage?.text}
+        onChange={(e) => handleUserMessage(e)}
       />
       <svg
         xmlns="http://www.w3.org/2000/svg"

@@ -162,6 +162,7 @@ class WoocommerceConnector:
         extracted_data = self.extract_data(item = item, keys = keys)
 
         # TODO Data can be improved further by removing unused keys/names
+        # TODO Store id as a string - currently its being stored as float (e.g. 2876.0)
         for key, value in extracted_data.items():
             if key in metadata_keys:
                 metadata[key] = value

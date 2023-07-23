@@ -38,4 +38,4 @@ django-extensions==3.2.3  # https://github.com/django-extensions/django-extensio
 django-coverage-plugin==3.0.0  # https://github.com/nedbat/django_coverage_plugin
 pytest-django==4.5.2  # https://github.com/pytest-dev/pytest-django
 
-sentence-transformers==2.2.2
+# sentence-transformers==2.2.2

@@ -315,8 +315,6 @@ export default function Home() {
                 </div>
               </motion.div>
             </div>
-
-            <Search />
           </div>
         </div>
       </div>

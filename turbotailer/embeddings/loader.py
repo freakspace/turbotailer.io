@@ -13,34 +13,13 @@ from turbotailer.embeddings.models import EmbeddingTask
 
 def create_vector_batches(embedding_task: EmbeddingTask):
     from turbotailer.embeddings.models import Content, VectorTask
-    # vectorstore_instance = Vectorstore.get_instance()
 
     embedding_task.status = "In progress"
     embedding_task.save()
 
-    # TODO Refactor
     fields = embedding_task.channel.get_available_fields()
 
-    print(fields)
-
     keys =  {**fields["selected"], **fields["required"]}
-
-
-    """ keys = {
-        "short_description": None, 
-        "name": None,
-        "description": None,
-        "sku": None,
-        "price": None,
-        "regular_price": None,
-        "on_sale": None,
-        "categories": ["name"],
-        "images": ["name", "src", "alt"],
-        "attributes": ["name", "options"],
-        "id": None,
-        "permalink": None,
-        "date_modified_gmt": None
-    } """
     
     batch_size = 32
 

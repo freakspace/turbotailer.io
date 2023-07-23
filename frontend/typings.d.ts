@@ -37,3 +37,15 @@ export interface INavItem {
   name: string;
   component: JSX.Element;
 }
+
+export interface IProduct {
+  name: string;
+  image: string;
+  link: string;
+  price: number | null;
+}
+
+export interface IMessage {
+  text: string;
+  products: IProduct[] | null
+}

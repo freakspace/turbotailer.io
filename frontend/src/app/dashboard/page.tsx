@@ -39,7 +39,6 @@ export default function Dashboard() {
 
       if (response.ok) {
         let data: IStore[] = await response.json();
-        console.log(data);
         setStore(data[0]); // Support only 1 store now -> add more later
       } else {
         // Some error here
@@ -63,7 +62,7 @@ export default function Dashboard() {
     },
     chat: {
       name: "Chat",
-      component: <Chat storeId={store?.id} />,
+      component: <Chat storeId={store?.id} setNotification={setNotification} />,
     },
   };
 

@@ -82,7 +82,7 @@ export default function Dashboard() {
   };
 
   return (
-    <div className="relative md:w-1/3 mx-auto mt-10">
+    <div className="relative md:w-1/3 mx-auto mt-10 h-screen">
       {notification && (
         <motion.div
           className="absolute bg-amber-500 p-4 border rounded-xl shadow-md text-white font-bold w-full left-0 right-0"

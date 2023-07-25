@@ -14,12 +14,7 @@ export default function Chat({
   storeId: string | undefined;
   setNotification: React.Dispatch<React.SetStateAction<string>>;
 }) {
-  const [messageHistory, setMessageHistory] = useState<IMessage[]>([
-    {
-      text: "Test",
-      products: [],
-    },
-  ]);
+  const [messageHistory, setMessageHistory] = useState<IMessage[]>([]);
   const [isLoading, setIsLoading] = useState(false);
 
   /* useEffect(() => {
@@ -32,7 +27,7 @@ export default function Chat({
   }, []); */
   console.log(messageHistory);
   return (
-    <div className="bg-white flex flex-col flex-grow border border-gray-300 rounded-3xl p-4 md:p-8 shadow-xl shadow-gray-200">
+    <div className="bg-white flex flex-col flex-grow border border-gray-300 rounded-3xl p-4 md:p-8 shadow-xl shadow-gray-200 overflow-y-auto max-h-1/2">
       <div className="flex-grow rounded-3xl mb-6 text-gray-500 flex flex-col gap-4">
         {messageHistory.map((message, key) => (
           <Message message={message} key={key} />

@@ -48,4 +48,5 @@ export interface IProduct {
 export interface IMessage {
   text: string;
   products: IProduct[] | null
+  systemMessage: boolean
 }

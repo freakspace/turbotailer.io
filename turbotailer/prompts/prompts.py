@@ -17,3 +17,22 @@ Helpful Answer:"""
     )
 
     return prompt.format(context=context, query=query)
+
+
+def product_refine_queryset(context: str, query: str):
+    prompt_template = """
+Use the following pieces of context to determine which is relevant to the users questions.
+
+Context:
+{context}
+
+Question: 
+{query}
+
+Relevant context:"""
+
+    prompt = PromptTemplate(
+        template=prompt_template, input_variables=["context", "query"]
+    )
+
+    return prompt.format(context=context, query=query)

@@ -86,6 +86,33 @@ class WoocommerceConnector:
 
         return response
 
+
+    def get_product(self, id: int):
+        PRODUCT_ENDPOINT = "/wp-json/wc/v3/products/"
+
+        if not self.connection:
+            self.connect()
+
+        url = f"http://{self.base_url}{PRODUCT_ENDPOINT}{id}"
+
+        response = self.connection.get(url)
+
+        if response.status_code == 200:
+            return response.json()
+        else:
+            logger.error(f"Server responded with status {response.status_code}: {response.text}")
+            if response.status_code == 400:
+                raise BadRequest(_("Invalid request"))
+            elif response.status_code == 401:
+                raise PermissionDenied(_("Incorrect API keys"))
+            elif response.status_code == 404:
+                raise Exception(_("The resource can not be found"))
+            elif response.status_code == 500:
+                raise Exception(_("Server error"))
+            else:
+                raise Exception(_("Unknown error"))
+
+
     def get_products(self):
         PRODUCTS_ENDPOINT = "/wp-json/wc/v3/products"
         # Starts page at

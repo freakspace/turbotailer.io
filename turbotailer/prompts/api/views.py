@@ -12,7 +12,8 @@ from django.conf import settings
 
 from ...embeddings.vectorstore import Vectorstore
 from .serializers import PromptSerializer
-from ..prompts import product_comparison_prompt
+from ..prompts import product_comparison_prompt, product_refine_queryset
+from turbotailer.stores.models import Store
 
 class PromptsViewSet(viewsets.ViewSet):
     authentication_classes = []
@@ -44,11 +45,21 @@ class PromptsViewSet(viewsets.ViewSet):
             namespace = namespace
         )
 
-        products = [{"name": json.loads(product.page_content)["name"], "permalink": json.loads(product.page_content)["permalink"]} for product in search]
+        ids = [product.metadata["id"] for product in search]
+
+        store = Store.objects.get(id=namespace)
+        connector = store.store_type.get_connection_class()
+    
+        # Init the connection
+        connection = connector.from_model(namespace)
+
+        connection.connect()
+
+        products = [connection.get_product(int(id)) for id in ids]
 
         context = json.dumps([json.loads(message.page_content) for message in search])
 
-        prompt = product_comparison_prompt(context, query)
+        prompt = product_refine_queryset(context, query)
 
         llm = OpenAI(model_name="text-davinci-003", openai_api_key=settings.OPENAPI_KEY)
         

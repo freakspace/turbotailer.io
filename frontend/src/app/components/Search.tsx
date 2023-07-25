@@ -18,6 +18,7 @@ export default function Search({
   const [userMessage, setUserMessage] = useState<IMessage>({
     text: "",
     products: [],
+    systemMessage: false,
   });
   const inputRef = useRef<HTMLInputElement>(null);
 
@@ -58,14 +59,14 @@ export default function Search({
     setMessageHistory((prev) => [...prev, userMessage]);
     const response = await prompt();
     if (response.ok) {
-      const data = await response.json();
-      console.log("Test A");
-      console.log(data);
+      let data: IMessage = await response.json();
+      data.systemMessage = true;
       setMessageHistory((prev) => [...prev, data]);
 
       setUserMessage({
         text: "",
         products: [],
+        systemMessage: false,
       });
     } else {
       setNotification("error");
@@ -87,6 +88,7 @@ export default function Search({
     let userMessage: IMessage = {
       text: e.target.value,
       products: [],
+      systemMessage: false,
     };
     setUserMessage(userMessage);
   };

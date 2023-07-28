@@ -3,7 +3,7 @@ from typing import List
 
 from langchain import LLMChain
 from langchain.prompts import StringPromptTemplate
-from langchain.chains.conversation.memory import ConversationBufferWindowMemory, ConversationBufferMemory
+from langchain.chains.conversation.memory import ConversationBufferMemory
 from langchain.chains import LLMChain
 from langchain.tools import BaseTool
 from langchain.agents import LLMSingleActionAgent, AgentExecutor

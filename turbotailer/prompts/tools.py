@@ -1,5 +1,7 @@
 import json
 
+from django.conf import settings
+
 from langchain import PromptTemplate, LLMChain
 from langchain.vectorstores import Pinecone
 from langchain.vectorstores.utils import DistanceStrategy
@@ -12,11 +14,9 @@ from pydantic import BaseModel, Field
 
 import pinecone
 
-openai_api_key="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"
+embeddings = OpenAIEmbeddings(openai_api_key=settings.OPENAPI_KEY)
 
-embeddings = OpenAIEmbeddings(openai_api_key=openai_api_key)
-
-pinecone.init(api_key="86860589-891d-4c83-897e-b42f2c4e21e7", environment="us-west4-gcp-free")
+pinecone.init(api_key=settings.PINECONE_API_KEY, environment="us-west4-gcp-free")
 
 
 class BaseProductSearchTool(BaseModel):

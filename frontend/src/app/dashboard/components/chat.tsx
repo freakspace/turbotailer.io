@@ -17,15 +17,27 @@ export default function Chat({
   const [messageHistory, setMessageHistory] = useState<IMessage[]>([]);
   const [isLoading, setIsLoading] = useState(false);
 
-  /* useEffect(() => {
-    const getMessages = () => {
-      const messages = ["Message 1", "Message 2"];
-      setMessages(messages);
+  useEffect(() => {
+    const getMessageHistory = async () => {
+      // TODO Check for token, storeId and Channels
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_DJANGO_API_URL}/api/prompts/message_history/`,
+        {
+          method: "GET",
+          credentials: "include",
+        }
+      );
+
+      const data = await response.json();
+
+      return data;
     };
 
-    getMessages();
-  }, []); */
-  console.log(messageHistory);
+    const data = getMessageHistory();
+
+    console.log(data);
+  }, []);
+
   return (
     <div className="bg-white flex flex-col flex-grow border border-gray-300 rounded-3xl p-4 md:p-8 shadow-xl shadow-gray-200 overflow-y-auto max-h-1/2">
       <div className="flex-grow rounded-3xl mb-6 text-gray-500 flex flex-col gap-4">

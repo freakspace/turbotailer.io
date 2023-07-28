@@ -18,10 +18,6 @@ class MessageSessionStorage(BaseChatMessageHistory):
     def messages(self) -> List[BaseMessage]:
         if not self.key in self.request.session:
             return []
-        
-        if not isinstance(self.request.session.get(self.key), list):
-            self.clear()
-            return []
 
         item: List[BaseMessage] = [json.loads(message) for message in self.request.session.get(self.key)]
 

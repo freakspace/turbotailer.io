@@ -36,6 +36,7 @@ export default function Search({
       `${process.env.NEXT_PUBLIC_DJANGO_API_URL}/api/prompts/prompt/`,
       {
         method: "POST",
+        credentials: "include",
         headers: {
           "Content-Type": "application/json",
         },

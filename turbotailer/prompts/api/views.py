@@ -45,6 +45,25 @@ class PromptsViewSet(viewsets.ViewSet):
         response = {"text": output, "products": []}
 
         return Response(response)
+    
+
+    @action(detail=False, methods=['get'])
+    def message_history(self, request):
+
+        key = "message_history"
+
+        history = request.session.get(key)
+
+        if history:
+
+            items = [json.loads(message) for message in request.session.get(key)]
+
+            response = {"message_history": items}
+
+            return Response(response)
+        else:
+            return Response({"message_history": []})
+    
 
 
         

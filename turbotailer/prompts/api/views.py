@@ -7,6 +7,11 @@ from rest_framework import viewsets
 from rest_framework import status
 
 from langchain.llms import OpenAI
+from langchain.chat_models import ChatOpenAI
+
+import langchain
+
+langchain.debug = True
 
 from django.conf import settings
 
@@ -30,11 +35,15 @@ class PromptsViewSet(viewsets.ViewSet):
         query = request.data.get('query')
         namespace = request.data.get('namespace')
 
-        llm = OpenAI(model_name="text-davinci-003", openai_api_key=settings.OPENAPI_KEY)
+        llm = ChatOpenAI(model_name="gpt-3.5-turbo", openai_api_key=settings.OPENAPI_KEY)
 
-        agent = get_agent(llm=llm, namespace=namespace, memory=MessageSessionStorage(request=request))
+        agent = get_agent(
+            llm=llm, 
+            namespace=namespace, 
+            memory=MessageSessionStorage(request=request)
+            )
 
-        output = agent.run(query)
+        output = agent.run(input=query)
 
         end_time = time.time()
 
@@ -42,15 +51,15 @@ class PromptsViewSet(viewsets.ViewSet):
 
         print(f"It took {elapsed_time} seconds to get search result")
         
-        response = {"text": output, "products": []}
+        # response = {"text": output, "products": []}
 
-        return Response(response)
+        return Response(output)
     
 
     @action(detail=False, methods=['get'])
     def message_history(self, request):
 
-        key = "message_history"
+        key = "chat_history"
 
         history = request.session.get(key)
 
@@ -58,11 +67,24 @@ class PromptsViewSet(viewsets.ViewSet):
 
             items = [json.loads(message) for message in request.session.get(key)]
 
-            response = {"message_history": items}
-
+            response = {"chat_history": items}
+            print("KIG")
             return Response(response)
         else:
-            return Response({"message_history": []})
+            return Response({"chat_history": []})
+    
+
+    @action(detail=False, methods=['post'])
+    def delete_message_history(self, request):
+
+        key = "chat_history"
+
+        if key in request.session:
+            del request.session[key]
+
+            return Response("Message history deleted")
+        
+        return Response("Message history could not be deleted", status=status.HTTP_400_BAD_REQUEST)
     
 
 

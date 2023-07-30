@@ -33,7 +33,7 @@ class BaseProductSearchTool(BaseModel):
 
 class ProductSearch(BaseProductSearchTool, BaseTool):
     name = "Product Search"
-    description = "use this tool when you need to search for product recommendations for a customer"
+    description = "use this tool when you need to search for new products that you haven't already recommended to a user"
 
     def _run(self, query: str):
         index = pinecone.Index("turbotailer")

@@ -1,16 +1,13 @@
 
 from typing import List
 
-from langchain import LLMChain
 from langchain.prompts import StringPromptTemplate
 from langchain.chains.conversation.memory import ConversationBufferMemory
-from langchain.chains import LLMChain
 from langchain.tools import BaseTool
-from langchain.agents import LLMSingleActionAgent, AgentExecutor
+from langchain.agents import initialize_agent
+from langchain.agents import AgentType
 
-from turbotailer.prompts.prompts import template_with_history
 from turbotailer.prompts.tools import ProductSearch
-from turbotailer.prompts.parsers import CustomOutputParser
 
 # Set up a prompt template
 class CustomPromptTemplate(StringPromptTemplate):
@@ -40,29 +37,17 @@ def get_agent(llm, namespace, memory):
     tools = [
         ProductSearch(namespace=namespace, llm=llm)
         ]
-
-    prompt = CustomPromptTemplate(
-    template=template_with_history,
-    tools=tools,
-    input_variables=["input", "intermediate_steps", "history"]
-)
-
-    tool_names = [tool.name for tool in tools]
-
-    output_parser = CustomOutputParser()
-
-    llm_chain = LLMChain(llm=llm, prompt=prompt)
-
-    agent = LLMSingleActionAgent(
-        llm_chain=llm_chain, 
-        output_parser=output_parser,
-        stop=["\nObservation:"], 
-        allowed_tools=tool_names
-    )
     
-    return AgentExecutor.from_agent_and_tools(
-            agent=agent, 
-            tools=tools, 
-            verbose=True,
-            memory=ConversationBufferMemory(chat_memory=memory)# ConversationBufferWindowMemory(k=2)
+    agent_chain = initialize_agent(
+        tools, 
+        llm, 
+        agent=AgentType.CHAT_CONVERSATIONAL_REACT_DESCRIPTION, 
+        verbose=True, 
+        memory=ConversationBufferMemory(
+            memory_key="chat_history", 
+            return_messages=True,
+            chat_memory=memory
+            )
         )
+
+    return agent_chain

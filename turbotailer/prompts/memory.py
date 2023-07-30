@@ -12,20 +12,21 @@ class MessageSessionStorage(BaseChatMessageHistory):
 
     def __init__(self, request):
         self.request = request
-        self.key = "message_history"
+        self.key = "chat_history"
 
     @property
     def messages(self) -> List[BaseMessage]:
-        if not self.key in self.request.session:
-            return []
 
-        item: List[BaseMessage] = [json.loads(message) for message in self.request.session.get(self.key)]
+        messages: List[BaseMessage] = []
 
-        messages = messages_from_dict(item)
+        if self.key in self.request.session:
+            items = [json.loads(message) for message in self.request.session.get(self.key)]
+            messages = messages_from_dict(items)
 
         return messages
 
     def add_message(self, message: BaseMessage) -> None:
+        print("Adding message to history")
         current = self.request.session.get(self.key, [])
         current.append(json.dumps(_message_to_dict(message)))
         self.request.session[self.key] = current

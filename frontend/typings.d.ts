@@ -45,8 +45,15 @@ export interface IProduct {
   price: number | null;
 }
 
-export interface IMessage {
-  text: string;
-  products: IProduct[] | null
-  systemMessage: boolean
+interface IMessageData {
+  content: string;
+  additional_kwargs: {};
+  example: boolean;
 }
+
+interface IMessage {
+  type: 'human' | 'ai';
+  data: MessageData;
+}
+
+

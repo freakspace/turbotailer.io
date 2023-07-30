@@ -3,6 +3,24 @@
 import { useState, useRef, useEffect } from "react";
 import { IMessage } from "../../../typings";
 
+let defaultUserMessage: IMessage = {
+  type: "human",
+  data: {
+    content: "",
+    additional_kwargs: {},
+    example: false,
+  },
+};
+
+let defaultAIMessage: IMessage = {
+  type: "ai",
+  data: {
+    content: "",
+    additional_kwargs: {},
+    example: false,
+  },
+};
+
 export default function Search({
   storeId,
   setMessageHistory,
@@ -10,16 +28,14 @@ export default function Search({
   setIsLoading,
 }: {
   storeId: string | undefined;
-  setMessageHistory: React.Dispatch<React.SetStateAction<IMessage[]>>;
+  setMessageHistory: React.Dispatch<
+    React.SetStateAction<IMessage[] | undefined>
+  >;
   setNotification: React.Dispatch<React.SetStateAction<string>>;
   setIsLoading: React.Dispatch<React.SetStateAction<boolean>>;
 }) {
   const [isActive, setIsActive] = useState(false);
-  const [userMessage, setUserMessage] = useState<IMessage>({
-    text: "",
-    products: [],
-    systemMessage: false,
-  });
+  const [userMessage, setUserMessage] = useState<IMessage>(defaultUserMessage);
   const inputRef = useRef<HTMLInputElement>(null);
 
   const handleClickOutside = (event: MouseEvent) => {
@@ -42,7 +58,7 @@ export default function Search({
         },
         body: JSON.stringify({
           namespace: storeId,
-          query: userMessage.text,
+          query: userMessage?.data.content,
         }),
       }
     );
@@ -57,21 +73,23 @@ export default function Search({
       return;
     }
 
-    setMessageHistory((prev) => [...prev, userMessage]);
+    // Add user message to history
+    setMessageHistory((prev) => [...(prev || []), userMessage]);
+
     const response = await prompt();
     if (response.ok) {
       let data: IMessage = await response.json();
-      data.systemMessage = true;
-      setMessageHistory((prev) => [...prev, data]);
+      console.log("Kig under");
+      console.log(data);
+      let message = defaultAIMessage;
+      message.data.content = data;
+      // Add AI message to history
+      setMessageHistory((prev) => [...(prev || []), message]);
 
-      setUserMessage({
-        text: "",
-        products: [],
-        systemMessage: false,
-      });
+      // Reset users query
+      setUserMessage(defaultUserMessage);
     } else {
       setNotification("error");
-      const data = await response.json();
     }
     setIsLoading(false);
   };
@@ -87,13 +105,16 @@ export default function Search({
 
   const handleUserMessage = (e: React.ChangeEvent<HTMLInputElement>) => {
     let userMessage: IMessage = {
-      text: e.target.value,
-      products: [],
-      systemMessage: false,
+      type: "human",
+      data: {
+        content: e.target.value,
+        additional_kwargs: {},
+        example: false,
+      },
     };
     setUserMessage(userMessage);
   };
-
+  console.log(userMessage);
   return (
     <div
       className={
@@ -106,7 +127,7 @@ export default function Search({
         placeholder="Chat with 1,765 products"
         className="w-full focus:outline-none h-8 text-gray-500"
         onFocus={() => setIsActive(true)}
-        value={userMessage?.text}
+        value={userMessage?.data.content}
         onChange={(e) => handleUserMessage(e)}
       />
       <svg

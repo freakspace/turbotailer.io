@@ -1,14 +1,15 @@
 import { IMessage } from "../../../../typings";
 
 export default function Message({ message }: { message: IMessage }) {
+  console.log("Test");
   return (
     <div className="block self-end">
       <div
         className={`relative border border-gray-300 p-4 md:px-5 md:py-4 rounded-3xl ${
-          message.systemMessage === true && "bg-gray-50"
+          message.type === "ai" && "bg-gray-50"
         }`}
       >
-        {message.products && message.products.length > 0 && (
+        {/* {message.products && message.products.length > 0 && (
           <div className="flex overflow-x-scroll space-x-4 mb-4 pb-4">
             {message.products.map((product, key) => (
               <div
@@ -23,8 +24,8 @@ export default function Message({ message }: { message: IMessage }) {
               </div>
             ))}
           </div>
-        )}
-        <p>{message.text}</p>
+        )} */}
+        <p>{message.data.content}</p>
       </div>
     </div>
   );

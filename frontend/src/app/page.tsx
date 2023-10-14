@@ -144,7 +144,7 @@ export default function Home() {
               In addition to early access, you will also receive 3 months free
               usage.
             </p>
-            <form onSubmit={(e) => handleSubmit(e)} className="">
+            <form onSubmit={(e) => handleSubmit(e)} className="relative">
               <div className="relative grid grid-cols-1 md:grid-cols-2 md:gap-4 mb-4">
                 {isSubscribed && (
                   <motion.div
@@ -450,7 +450,7 @@ export default function Home() {
           </div>
           <div className="md:w-1/2">
             <Image
-              src="/images/WooCommerce_logo.png"
+              src="/images/woo.png"
               width={300}
               height={300}
               alt=""
@@ -468,8 +468,8 @@ export default function Home() {
           Sign up today, and gain early access when we launch TurboTailer. In
           addition to early access, you will also receive 3 months free usage.
         </p>
-        <form onSubmit={(e) => handleSubmit(e)} className="">
-          <div className="grid grid-cols-1 md:grid-cols-3 md:gap-4 mb-1">
+        <form onSubmit={(e) => handleSubmit(e)} className="relative">
+          <div className="relative grid grid-cols-1 md:grid-cols-3 md:gap-4 mb-1">
             {isSubscribed && (
               <motion.div
                 animate={controls}

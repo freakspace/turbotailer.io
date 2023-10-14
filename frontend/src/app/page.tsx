@@ -3,16 +3,10 @@
 import { useState, useRef, useEffect } from "react";
 import { motion, useAnimation } from "framer-motion";
 
-import type { Metadata } from "next";
 import Image from "next/image";
 
 import Input from "./components/Input";
 import Button from "./components/Button";
-
-export const metadata: Metadata = {
-  title: "Turbotailer.io",
-  description: "Turbocharge your WooCommerce store",
-};
 
 export default function Home() {
   const [name, setName] = useState("");

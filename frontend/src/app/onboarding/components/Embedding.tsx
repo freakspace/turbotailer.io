@@ -58,6 +58,9 @@ export default function Embedding({
 
   const startEmbedding = async () => {
     const channels = selectedChannels.map((channel) => channel.channel);
+    console.log("KIG HER")
+    console.log(channels)
+    console.log(storeId)
     const response = await fetch(
       `${process.env.NEXT_PUBLIC_DJANGO_API_URL}/api/embeddings/create_task/`,
       {
@@ -73,6 +76,7 @@ export default function Embedding({
       }
     );
     const data = await response.json();
+    console.log("Vi tester")
     console.log(data);
     if (response.ok) {
       push("dashboard/");
@@ -82,7 +86,8 @@ export default function Embedding({
   useEffect(() => {
     setEstimatedPrice((estimatedTokens / 1000) * 0.0001);
   }, [estimatedTokens]);
-
+  console.log(selectedChannels)
+  console.log(storeId)
   return (
     <StepWrapper>
       <div className="">

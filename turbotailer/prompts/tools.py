@@ -36,7 +36,7 @@ class ProductSearch(BaseProductSearchTool, BaseTool):
     description = "use this tool when you need to search for new products that you haven't already recommended to a user"
 
     def _run(self, query: str):
-        index = pinecone.Index("turbotailer")
+        index = pinecone.Index("turbotailer-index") # TODO Add to environment
 
         vectorstore = Pinecone(
             index=index, 

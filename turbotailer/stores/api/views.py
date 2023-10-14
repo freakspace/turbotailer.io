@@ -38,8 +38,6 @@ from turbotailer.embeddings.connectors.woocommerce import WoocommerceConnector
 
 
 # TODO Changing channel fields will need a complete re-embedding. Will automatically happen at next re-embed.
-#  
-
 
 class StoresViewSet(RetrieveModelMixin, ListModelMixin, GenericViewSet):
     authentication_classes = [TokenAuthentication, SessionAuthentication]

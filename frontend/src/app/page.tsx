@@ -137,7 +137,7 @@ export default function Home() {
           </h2>
           <div className="bg-gray-100 px-4 md:px-8 py-4 md:py-8 rounded-3xl shadow-xl shadow-gray-200 border border-white">
             <h3 className="text-xl md:text-3xl text-blue-800 font-bold mb-3">
-              Get Early Access + 3 Months Free Access
+              Get Early Access + 3 Months Free
             </h3>
             <p className="mb-6 text-gray-800">
               Sign up today, and gain early access when we launch TurboTailer.
@@ -303,12 +303,12 @@ export default function Home() {
           </div>
         </div>
       </div>
-      <div className="container mx-auto mt-40 mb-20 md:w-1/2">
+      <div className="container mx-auto mt-10 md:mt-40 mb-10 md:mb-20 md:w-1/2">
         <h2 className="md:text-5xl text-2xl text-center font-bold text-blue-800">Turbotailer saves you money on customer support & increases your conversion rate</h2>
       </div>
       <div className="container mx-auto">
-        <div className="flex flex-col md:flex-row justify-center items-center md:p-10 p-6 mb-20">
-          <div className="mb-3 md:mb-0  md:w-1/2">
+        <div className="flex flex-col md:flex-row justify-center items-center md:p-10 p-6 mb-10 md:mb-20">
+          <div className="mb-3 md:mb-0 md:w-1/2">
             <h3 className="text-md md:text-2xl text-blue-800 font-bold mb-1 md:mb-3">
               Save time & money on customer service
             </h3>
@@ -333,15 +333,15 @@ export default function Home() {
         </div>
       </div>
       <div className="container mx-auto">
-        <div className="flex flex-col md:flex-row-reverse md:flex-row justify-center items-center md:p-10 p-6 mb-20">
-          <div className="md:w-1/2">
-            <h3 className="text-2xl text-blue-800 font-bold mb-3">
+        <div className="flex flex-col md:flex-row-reverse md:flex-row justify-center items-center md:p-10 p-6 mb-10 md:mb-20">
+          <div className="mb-3 md:mb-0 md:w-1/2">
+            <h3 className="text-md md:text-2xl text-blue-800 font-bold mb-1 md:mb-3">
               Increase your conversion rate
             </h3>
-            <h2 className="text-5xl font-bold mb-6">
-              Intelligent Product Recs
+            <h2 className="text-3xl md:text-5xl font-bold mb-3 md:mb-6">
+              Intelligent product recs
             </h2>
-            <p className="text-2xl">
+            <p className="text-xl md:text-2xl">
               Make your WooCommerce feel like a physical store-front and give
               your customers instant product recommendations. By utilizing a
               sophisticated  embedding strategy, our AI can quorate
@@ -360,15 +360,15 @@ export default function Home() {
         </div>
       </div>
       <div className="container mx-auto">
-        <div className="flex flex-col md:flex-row justify-center items-center md:p-10 p-6 mb-20">
-          <div className="md:w-1/2">
-            <h3 className="text-2xl text-blue-800 font-bold mb-3">
+        <div className="flex flex-col md:flex-row justify-center items-center md:p-10 p-6 mb-10 md:mb-20">
+          <div className="mb-3 md:mb-0 md:w-1/2">
+            <h3 className="text-md md:text-2xl text-blue-800 font-bold mb-1 md:mb-3">
               Add to cart
             </h3>
-            <h2 className="text-5xl font-bold mb-6">
+            <h2 className="text-3xl md:text-5xl font-bold mb-3 md:mb-6">
               Convert your chats to sales
             </h2>
-            <p className="text-2xl">
+            <p className="text-xl md:text-2xl">
               Give your customers the option to add any product recommendation
               to the basket, directly from the chat window. Go directly to
               checkout or continue exactly where they left off.{" "}
@@ -386,15 +386,15 @@ export default function Home() {
         </div>
       </div>
       <div className="container mx-auto">
-        <div className="flex flex-col md:flex-row-reverse md:flex-row justify-center items-center md:p-10 p-6 mb-20">
-          <div className="md:w-1/2">
-            <h3 className="text-2xl text-blue-800 font-bold mb-3">
+        <div className="flex flex-col md:flex-row-reverse md:flex-row justify-center items-center md:p-10 p-6 mb-10 md:mb-20">
+          <div className="mb-3 md:mb-0 md:w-1/2">
+            <h3 className="text-md md:text-2xl text-blue-800 font-bold mb-1 md:mb-3">
               Don&apos;t leave your customers behind
             </h3>
-            <h2 className="text-5xl font-bold mb-6">
+            <h2 className="text-3xl md:text-5xl font-bold mb-3 md:mb-6">
               Switch to agent
             </h2>
-            <p className="text-2xl">
+            <p className="text-xl md:text-2xl">
               We all know how frustrating it can be not being able to connect directly to an agent, so we have made it super easy to connect directly to one of your available agents. 
             </p>
           </div>
@@ -410,15 +410,15 @@ export default function Home() {
         </div>
       </div>
       <div className="container mx-auto">
-        <div className="flex flex-col md:flex-row justify-center items-center md:p-10 p-6 mb-20">
-          <div className="md:w-1/2">
-            <h3 className="text-2xl text-blue-800 font-bold mb-3">
+        <div className="flex flex-col md:flex-row justify-center items-center md:p-10 p-6 mb-10 md:mb-20">
+          <div className="mb-3 md:mb-0 md:w-1/2">
+            <h3 className="text-md md:text-2xl text-blue-800 font-bold mb-1 md:mb-3">
               Grow your e-mail list
             </h3>
-            <h2 className="text-5xl font-bold mb-6">
+            <h2 className="text-3xl md:text-5xl font-bold mb-3 md:mb-6">
               Collect leads
             </h2>
-            <p className="text-2xl">
+            <p className="text-xl md:text-2xl">
               Grow your e-mail list by collecting leads directly from the chat widget. Collect leads when your customer switches to an agent, or simply just show a custom message prompting the user to sign up for your newsletter.
             </p>
           </div>
@@ -434,15 +434,15 @@ export default function Home() {
         </div>
       </div>
       <div className="container mx-auto">
-        <div className="flex flex-col md:flex-row-reverse md:flex-row justify-center items-center md:p-10 p-6 mb-20">
-          <div className="md:w-1/2">
-            <h3 className="text-2xl text-blue-800 font-bold mb-3">
+        <div className="flex flex-col md:flex-row-reverse md:flex-row justify-center items-center md:p-10 p-6 mb-10 md:mb-20">
+          <div className="mb-10 md:mb-0 md:w-1/2">
+            <h3 className="text-md md:text-2xl text-blue-800 font-bold mb-1 md:mb-3">
               Flawless integration
             </h3>
-            <h2 className="text-5xl font-bold mb-6">
+            <h2 className="text-3xl md:text-5xl font-bold mb-3 md:mb-6">
               Integrates easily with WooCommerce
             </h2>
-            <p className="text-2xl">
+            <p className="text-xl md:text-2xl">
               We have worked tirelessly to make it a breeze integrating with
               your existing WooCommerce store. Just add your API keys, and
               implement a lightweight script, and you are good to go.
@@ -461,15 +461,15 @@ export default function Home() {
       </div>
       <div className="container mx-auto bg-gray-100 px-4 md:px-8 py-4 md:py-8 rounded-3xl shadow-xl shadow-gray-200 border border-white mb-20 text-center">
         <div className="md:w-1/2 mx-auto">
-        <h3 className="text-xl md:text-3xl text-blue-800 font-bold mb-3">
-          Get Early Access
+        <h3 className="text-2xl md:text-3xl text-blue-800 font-bold mb-3">
+          Get Early Access + 3 Months Free
         </h3>
         <p className="mb-6 text-gray-800">
           Sign up today, and gain early access when we launch TurboTailer. In
           addition to early access, you will also receive 3 months free usage.
         </p>
         <form onSubmit={(e) => handleSubmit(e)} className="relative">
-          <div className="relative grid grid-cols-1 md:grid-cols-3 md:gap-4 mb-1">
+          <div className="relative grid grid-cols-1 md:grid-cols-3 gap-2 md:gap-4 mb-1">
             {isSubscribed && (
               <motion.div
                 animate={controls}

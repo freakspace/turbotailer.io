@@ -123,7 +123,7 @@ export default function Home() {
   }, [messageFour, messageOne, messageThree, messageTwo]);
 
   return (
-    <div className="container mx-auto mt-20">
+    <div className="container mx-auto mt-10 md:mt-20">
       <div className="flex flex-col md:flex-row justify-center items-center md:p-10 p-6 mb-20">
         <div className="md:w-1/2 ">
           <h1 className="text-gray-800 text-4xl md:text-7xl mb-3 md:mb-6">
@@ -303,19 +303,19 @@ export default function Home() {
           </div>
         </div>
       </div>
-      <div className="container mx-auto mt-40 mb-20 w-1/2">
-        <h2 className="text-5xl text-center font-bold text-blue-800">Turbotailer saves you money on customer support & increases your conversion rate</h2>
+      <div className="container mx-auto mt-40 mb-20 md:w-1/2">
+        <h2 className="md:text-5xl text-2xl text-center font-bold text-blue-800">Turbotailer saves you money on customer support & increases your conversion rate</h2>
       </div>
       <div className="container mx-auto">
         <div className="flex flex-col md:flex-row justify-center items-center md:p-10 p-6 mb-20">
-          <div className="md:w-1/2">
-            <h3 className="text-2xl text-blue-800 font-bold mb-3">
+          <div className="mb-3 md:mb-0  md:w-1/2">
+            <h3 className="text-md md:text-2xl text-blue-800 font-bold mb-1 md:mb-3">
               Save time & money on customer service
             </h3>
-            <h2 className="text-5xl font-bold mb-6">
+            <h2 className="text-3xl md:text-5xl font-bold mb-3 md:mb-6">
               Give your customers instant answers to any questions
             </h2>
-            <p className="text-2xl">
+            <p className="text-xl md:text-2xl">
               By utilizing sophisticated AI, TurboTailer can answer
               questions about on-going orders, your store policy, terms and
               conditions or anything in between.

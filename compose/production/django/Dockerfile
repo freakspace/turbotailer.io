@@ -8,11 +8,11 @@ FROM python as python-build-stage
 ARG BUILD_ENVIRONMENT=production
 
 # Install apt packages
-RUN apt-get update && apt-get install --no-install-recommends -y \
-  # dependencies for building Python packages
-  build-essential \
-  # psycopg2 dependencies
-  libpq-dev
+RUN apt-get update && apt-get upgrade -y && apt-get install --no-install-recommends -y
+# dependencies for building Python packages
+RUN apt-get install build-essential -y
+# psycopg2 dependencies
+RUN apt-get install libpq-dev -y
 
 # Requirements are installed here to ensure they will be cached.
 COPY ./requirements .
@@ -38,15 +38,14 @@ RUN addgroup --system django \
     && adduser --system --ingroup django django
 
 
-# Install required system dependencies
-RUN apt-get update && apt-get install --no-install-recommends -y \
+RUN apt-get update -y && apt-get upgrade -y && apt-get install --no-install-recommends -y
   # psycopg2 dependencies
-  libpq-dev \
+RUN apt-get install libpq-dev -y
   # Translations dependencies
-  gettext \
+RUN apt-get install gettext -y
   # cleaning up unused files
-  && apt-get purge -y --auto-remove -o APT::AutoRemove::RecommendsImportant=false \
-  && rm -rf /var/lib/apt/lists/*
+RUN apt-get install apt-get purge -y --auto-remove -o APT::AutoRemove::RecommendsImportant=false
+RUN rm -rf /var/lib/apt/lists/*
 
 # All absolute dir copies ignore workdir instruction. All relative dir copies are wrt to the workdir instruction
 # copy python dependency wheels from python-build-stage
